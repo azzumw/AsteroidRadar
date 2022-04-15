@@ -30,6 +30,9 @@ class MainViewModel : ViewModel() {
     private val _asteroids = MutableLiveData<List<Asteroid>>()
     val asteroids get() = _asteroids!!
 
+    private val _singleAsteroid = MutableLiveData<Asteroid>()
+    val  singleAsteroid get() = _singleAsteroid
+
     init {
         getApod()
         getAsteroids()
@@ -64,5 +67,9 @@ class MainViewModel : ViewModel() {
                 _asteroids.value = listOf()
             }
         }
+    }
+
+    fun onAsteroidClicked(amphibian: Asteroid) {
+        _singleAsteroid.value = amphibian
     }
 }
