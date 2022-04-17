@@ -15,7 +15,7 @@ import java.lang.Exception
 
 class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
-    val allasteroids: List<Asteroid> = asteroidDao.getAllAsteroids()
+    val allasteroids: LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids().asLiveData()
 
     private val _status = MutableLiveData<String>()
     val status: LiveData<String> = _status
@@ -45,7 +45,8 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 //        getAsteroids(AsteroidApiFilter.SHOW_TODAY)
         insertAsteroidsInDatabase(AsteroidApiFilter.SHOW_TODAY)
 
-        Log.e("VIEWMODEL DATABASE:",allasteroids.size.toString())
+
+        Log.e("VIEWMODEL DATABASE:",allasteroids.value?.size.toString())
 
     }
 
@@ -103,16 +104,18 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
             val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
 
+            asteroids.value = list
+
             asteroidDao.insertAllAsteroids(list)
         }
     }
 
 
-//    fun getAllAsteroids(): LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids()
+//    fun getAllAsteroids(): LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids().asLiveData()
 
-    fun getTodayAsteroids(date:String): LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(date)
+//    fun getTodayAsteroids(date:String): LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(date)
 
-    fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
+//    fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
 
     fun onAsteroidClicked(asteroid: Asteroid) {
         _singleAsteroid.value = asteroid
