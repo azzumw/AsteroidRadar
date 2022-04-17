@@ -3,6 +3,7 @@ package com.udacity.asteroidradar.database
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.udacity.asteroidradar.Asteroid
 
@@ -10,14 +11,14 @@ import com.udacity.asteroidradar.Asteroid
 interface AsteroidDao {
 
     @Query("select * from asteroids order by closeApproachDate")
-    fun getAllAsteroids():List<Asteroid>
+    fun getAllAsteroids():LiveData<List<Asteroid>>
 
     @Query("select * from asteroids where closeApproachDate=:todayDate")
-    fun getTodaysAsteroids(todayDate:String):List<Asteroid>
+    fun getTodaysAsteroids(todayDate:String):LiveData<List<Asteroid>>
 
     @Query("select * from asteroids where id=:id")
     fun getAnAsteroid(id:Long):Asteroid
 
-    @Insert
-    suspend fun insertAllAsteroids(asteroids:ArrayList<Asteroid>)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAllAsteroids(asteroids:List<Asteroid>)
 }

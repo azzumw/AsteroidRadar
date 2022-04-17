@@ -85,24 +85,27 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
     /**Database calls*/
 
-    fun insertAsteroidsInDatabase(endD:AsteroidApiFilter){
+    private fun insertAsteroidsInDatabase(endD:AsteroidApiFilter){
 
         val endDate = when(endD){
             AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
             else -> getNextSevenDaysFormattedDates(endD.num).last()
         }
 
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
                 endDate,Constants.API_KEY)
+
             val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
+
             asteroidDao.insertAllAsteroids(list)
         }
     }
 
-    fun getAllAsteroids():List<Asteroid> = asteroidDao.getAllAsteroids()
 
-    fun getTodayAsteroids(date:String):List<Asteroid> = asteroidDao.getTodaysAsteroids(date)
+    fun getAllAsteroids(): LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids()
+
+    fun getTodayAsteroids(date:String): LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(date)
 
     fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
 

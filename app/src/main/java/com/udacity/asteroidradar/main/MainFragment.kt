@@ -64,8 +64,8 @@ class MainFragment : Fragment() {
          * Make DB queries here
          * */
         when(item.itemId){
-            R.id.show_today -> viewModel.getAsteroids(AsteroidApiFilter.SHOW_TODAY)
-            R.id.show_week ->viewModel.getAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
+//            R.id.show_today -> viewModel.getAsteroids(AsteroidApiFilter.SHOW_TODAY)
+//            R.id.show_week ->viewModel.getAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
         }
         return true
     }

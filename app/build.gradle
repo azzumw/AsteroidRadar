@@ -67,7 +67,9 @@ dependencies {
     implementation "io.coil-kt:coil:1.1.1"
 
     implementation "androidx.room:room-runtime:2.2.5"
-    kapt "androidx.room:room-compiler:2.2.5"
+//    kapt "androidx.room:room-compiler:2.2.5"
+//    kapt "androidx.room:room-compiler:2.4.2"
+    annotationProcessor "androidx.room:room-compiler:2.4.2"
 
     implementation "android.arch.work:work-runtime-ktx:1.0.1"
 
