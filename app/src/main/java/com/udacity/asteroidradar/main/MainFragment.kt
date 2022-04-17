@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import com.udacity.asteroidradar.AsteroidApplication
+import com.udacity.asteroidradar.MainViewModelFactory
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.AsteroidApiFilter
@@ -16,7 +18,10 @@ import com.udacity.asteroidradar.databinding.FragmentMainBinding
 class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
-    private val viewModel:MainViewModel by activityViewModels()
+
+    private val viewModel:MainViewModel by activityViewModels{
+        MainViewModelFactory((activity?.application as AsteroidApplication).database.asteroidDao())
+    }
 //    private val viewModel: MainViewModel by lazy {
 //        ViewModelProvider(this).get(MainViewModel::class.java)
 //    }
@@ -55,6 +60,9 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        /**
+         * Make DB queries here
+         * */
         when(item.itemId){
             R.id.show_today -> viewModel.getAsteroids(AsteroidApiFilter.SHOW_TODAY)
             R.id.show_week ->viewModel.getAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
