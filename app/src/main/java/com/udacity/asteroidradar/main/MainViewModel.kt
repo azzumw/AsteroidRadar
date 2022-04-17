@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.main
 
+import android.content.ClipData
 import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
@@ -13,6 +14,8 @@ import org.json.JSONObject
 import java.lang.Exception
 
 class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
+
+    val allasteroids: List<Asteroid> = asteroidDao.getAllAsteroids()
 
     private val _status = MutableLiveData<String>()
     val status: LiveData<String> = _status
@@ -41,6 +44,8 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
         getApod()
 //        getAsteroids(AsteroidApiFilter.SHOW_TODAY)
         insertAsteroidsInDatabase(AsteroidApiFilter.SHOW_TODAY)
+
+        Log.e("VIEWMODEL DATABASE:",allasteroids.size.toString())
 
     }
 
@@ -103,7 +108,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     }
 
 
-    fun getAllAsteroids(): LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids()
+//    fun getAllAsteroids(): LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids()
 
     fun getTodayAsteroids(date:String): LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(date)
 

@@ -11,7 +11,7 @@ import com.udacity.asteroidradar.Asteroid
 interface AsteroidDao {
 
     @Query("select * from asteroids order by closeApproachDate")
-    fun getAllAsteroids():LiveData<List<Asteroid>>
+    fun getAllAsteroids():List<Asteroid>
 
     @Query("select * from asteroids where closeApproachDate=:todayDate")
     fun getTodaysAsteroids(todayDate:String):LiveData<List<Asteroid>>
