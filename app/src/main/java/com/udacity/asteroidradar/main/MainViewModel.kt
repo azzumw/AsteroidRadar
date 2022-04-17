@@ -8,10 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.api.AsteroidApi
-import com.udacity.asteroidradar.api.getTodaysDate
-import com.udacity.asteroidradar.api.getYesterdayDate
-import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
+import com.udacity.asteroidradar.api.*
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
@@ -35,14 +32,16 @@ class MainViewModel : ViewModel() {
 
     init {
         getApod()
-        getAsteroids()
+        getAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
     }
 
     private fun getApod() {
+
         viewModelScope.launch {
             try {
                 _photo.value =  AsteroidApi.retrofitService.getApod(getTodaysDate(),Constants.API_KEY)
                 _status.value = photo.value!!.url
+
 
                 Log.e("MainViewModel:",status.value.toString())
             }catch (e:Exception){
@@ -54,22 +53,31 @@ class MainViewModel : ViewModel() {
         Log.e("MainViewModel:",_status.value.toString())
     }
 
-    fun getAsteroids(){
+     fun getAsteroids(endD:AsteroidApiFilter){
+
+        val endDate = when(endD){
+            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
+            else -> getNextSevenDaysFormattedDates(endD.num).last()
+        }
+
+
         viewModelScope.launch {
             try {
-                val result = AsteroidApi.retrofitService2.getNeoWs(Constants.API_KEY)
-                val list = parseAsteroidsJsonResult(JSONObject(result))
+                val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
+                    endDate,Constants.API_KEY)
+                val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
                 _asteroids.value = list
                 Log.e("VIEWMODEL-ASTEROIDS:: ",result)
                 Log.e("VIEWMODEL-ASTEROIDS:: ",list.size.toString())
 
             }catch (e:Exception){
+                Log.e("getAsteroiuds: " ,e.message.toString())
                 _asteroids.value = listOf()
             }
         }
     }
 
-    fun onAsteroidClicked(amphibian: Asteroid) {
-        _singleAsteroid.value = amphibian
+    fun onAsteroidClicked(asteroid: Asteroid) {
+        _singleAsteroid.value = asteroid
     }
 }

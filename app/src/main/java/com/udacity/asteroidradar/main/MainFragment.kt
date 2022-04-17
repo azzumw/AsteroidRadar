@@ -9,6 +9,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.api.AsteroidApiFilter
+import com.udacity.asteroidradar.api.getTodaysDate
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -42,7 +44,7 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val title = viewModel.status.value.toString()
         Log.e("MainFrag",title)
-
+        Log.e("MainFrag today Date:", getTodaysDate())
         binding.executePendingBindings()
 
     }
@@ -53,6 +55,10 @@ class MainFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.show_today -> viewModel.getAsteroids(AsteroidApiFilter.SHOW_TODAY)
+            R.id.show_week ->viewModel.getAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
+        }
         return true
     }
 }

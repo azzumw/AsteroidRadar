@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.api
 
+import android.util.Log
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Asteroid
@@ -14,6 +15,12 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import java.text.SimpleDateFormat
 import java.util.*
+
+enum class AsteroidApiFilter(val num:Int) {
+    SHOW_TODAY(num = 0),
+    SHOW_WEEKLY(num = 7),
+    SHOW_SAVED(num = 9)
+}
 
 
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory())
@@ -30,13 +37,16 @@ private val retrofitAsteroids = Retrofit.Builder()
     .baseUrl(Constants.BASE_URL)
     .build()
 
+
 interface AsteroidApiService{
 
     @GET(Constants.APOD_END_POINT)
     suspend fun getApod(@Query(Constants.DATE_PARAM)date:String,@Query(Constants.API_KEY_PARAM) apiKey:String): PictureOfDay
 
     @GET(Constants.ASTEROID_END_POINT)
-    suspend fun getNeoWs(@Query("api_key")apiKey:String):String
+    suspend fun getNeoWs(@Query(Constants.START_DATE_PARAM) startDate:String,
+                         @Query(Constants.END_DATE_PARAM)endDate:String,
+                         @Query(Constants.API_KEY_PARAM) apiKey: String):String
 }
 
 object AsteroidApi{
@@ -46,18 +56,17 @@ object AsteroidApi{
     val retrofitService2 : AsteroidApiService by lazy {
         retrofitAsteroids.create(AsteroidApiService::class.java)
     }
-
 }
 
-fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
+fun parseAsteroidsJsonResult(jsonResult: JSONObject,numDays:Int): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
 
     val asteroidList = ArrayList<Asteroid>()
 
-    val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()
+    val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates(numDays)
     for (formattedDate in nextSevenDaysFormattedDates) {
         val dateAsteroidJsonArray = nearEarthObjectsJson.getJSONArray(formattedDate)
-
+        Log.e("dateAsteroidJsonArray: ", dateAsteroidJsonArray.length().toString())
         for (i in 0 until dateAsteroidJsonArray.length()) {
             val asteroidJson = dateAsteroidJsonArray.getJSONObject(i)
             val id = asteroidJson.getLong("id")
@@ -84,15 +93,20 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     return asteroidList
 }
 
-private fun getNextSevenDaysFormattedDates(): ArrayList<String> {
+fun getNextSevenDaysFormattedDates(numOfDays:Int): ArrayList<String> {
     val formattedDateList = ArrayList<String>()
 
     val calendar = Calendar.getInstance()
-    for (i in 0..Constants.DEFAULT_END_DATE_DAYS) {
+    for (i in 0..numOfDays) {
         val currentTime = calendar.time
         val dateFormat = SimpleDateFormat(API_QUERY_DATE_FORMAT, Locale.getDefault())
         formattedDateList.add(dateFormat.format(currentTime))
         calendar.add(Calendar.DAY_OF_YEAR, 1)
+
+    }
+
+    for (i in formattedDateList){
+        Log.e("FORMATED DATES: ",formattedDateList.toString())
     }
 
     return formattedDateList

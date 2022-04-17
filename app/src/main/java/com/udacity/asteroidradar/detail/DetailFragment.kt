@@ -17,19 +17,27 @@ class DetailFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
         val binding = FragmentDetailBinding.inflate(inflater)
-        binding.lifecycleOwner = this
-        binding.viewModel = this@DetailFragment.viewModel
+
+
+        binding.apply {
+            lifecycleOwner = this.lifecycleOwner
+            viewModel = this@DetailFragment.viewModel
+            asteroid = this@DetailFragment.viewModel.singleAsteroid.value
+
+            helpButton.setOnClickListener {
+                displayAstronomicalUnitExplanationDialog()
+            }
+        }
+
 
 //        val asteroid = DetailFragmentArgs.fromBundle(arguments!!).selectedAsteroid
 
-        binding.asteroid = viewModel.singleAsteroid.value
+
 
 //        binding.closeApproachDate.text = viewModel.singleAsteroid.value?.closeApproachDate
 
-        binding.helpButton.setOnClickListener {
-            displayAstronomicalUnitExplanationDialog()
-        }
 
         return binding.root
     }
