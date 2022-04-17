@@ -40,7 +40,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     init {
         getApod()
 //        getAsteroids(AsteroidApiFilter.SHOW_TODAY)
-        insertAsteroidsInDatabase(AsteroidApiFilter.SHOW_WEEKLY)
+        insertAsteroidsInDatabase(AsteroidApiFilter.SHOW_TODAY)
 
     }
 
@@ -59,34 +59,34 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
         }
     }
 
-     fun getAsteroids(endD:AsteroidApiFilter){
-
-        val endDate = when(endD){
-            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
-            else -> getNextSevenDaysFormattedDates(endD.num).last()
-        }
-
-
-        viewModelScope.launch {
-            try {
-                val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
-                    endDate,Constants.API_KEY)
-                val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
-                _asteroids.value = list
-                Log.e("VIEWMODEL-ASTEROIDS:: ",result)
-                Log.e("VIEWMODEL-ASTEROIDS:: ",list.size.toString())
-
-            }catch (e:Exception){
-                Log.e("getAsteroiuds: " ,e.message.toString())
-                _asteroids.value = listOf()
-            }
-        }
-    }
+//     fun getAsteroids(endD:AsteroidApiFilter){
+//
+//        val endDate = when(endD){
+//            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
+//            else -> getNextSevenDaysFormattedDates(endD.num).last()
+//        }
+//
+//
+//        viewModelScope.launch {
+//            try {
+//                val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
+//                    endDate,Constants.API_KEY)
+//                val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
+//                _asteroids.value = list
+//                Log.e("VIEWMODEL-ASTEROIDS:: ",result)
+//                Log.e("VIEWMODEL-ASTEROIDS:: ",list.size.toString())
+//
+//            }catch (e:Exception){
+//                Log.e("getAsteroiuds: " ,e.message.toString())
+//                _asteroids.value = listOf()
+//            }
+//        }
+//    }
 
     /**Database calls*/
 
     fun insertAsteroidsInDatabase(endD:AsteroidApiFilter){
-//        var list:List<Asteroid> = mutableListOf()
+
         val endDate = when(endD){
             AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
             else -> getNextSevenDaysFormattedDates(endD.num).last()

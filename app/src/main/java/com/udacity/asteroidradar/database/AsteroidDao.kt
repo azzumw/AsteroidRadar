@@ -19,5 +19,5 @@ interface AsteroidDao {
     fun getAnAsteroid(id:Long):Asteroid
 
     @Insert
-    suspend fun insertAllAsteroids(list:List<Asteroid>)
+    suspend fun insertAllAsteroids(asteroids:ArrayList<Asteroid>)
 }
