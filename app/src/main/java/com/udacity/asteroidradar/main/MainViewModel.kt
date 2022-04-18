@@ -13,27 +13,19 @@ import java.lang.Exception
 
 class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
-//    private val _allasteroids = asteroidDao.getTodaysAsteroids(getTodaysDate())
-
-    var alist : LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(getTodaysDate()).asLiveData()
+    var todaysAsteroidsList : LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(getTodaysDate()).asLiveData()
 
     private val _status = MutableLiveData<String>()
-    val status: LiveData<String> = _status
-
-    private val _asteroidstatus = MutableLiveData<String>()
-    val asteroidstatus: LiveData<String> = _asteroidstatus
+    private val status: LiveData<String> = _status
 
     private val _photo= MutableLiveData<PictureOfDay>()
-    val photo:LiveData<PictureOfDay> = _photo!!
-
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids get() = _asteroids
+    val photo:LiveData<PictureOfDay> = _photo
 
     private val _singleAsteroid = MutableLiveData<Asteroid>()
     val  singleAsteroid get() = _singleAsteroid
 
     val displayTitle = Transformations.map(photo){
-        if(it.title.isNullOrEmpty()){
+        if(it.title.isEmpty()){
             "No image"
         }else{
             it.title
@@ -44,13 +36,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
     init {
         getApod()
-//        getAsteroids(AsteroidApiFilter.SHOW_TODAY)
         getAsteroidsFromApiAndInsertIntoDB(AsteroidApiFilter.SHOW_WEEKLY)
-
-//        alist = asteroidDao.getTodaysAsteroids(todayDate = getTodaysDate()).asLiveData()
-
-        Log.e("DATABASE VM:", alist.value?.size.toString())
-
     }
 
     private fun getApod() {
@@ -60,37 +46,11 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
                 _photo.value =  AsteroidApi.retrofitService.getApod(getTodaysDate(),Constants.API_KEY)
                 _status.value = photo.value!!.url
 
-                Log.e("VM APOD status:",status.value.toString())
             }catch (e:Exception){
                 _status.value = "Failure: ${e.message}"
-
             }
         }
     }
-
-//     fun getAsteroids(endD:AsteroidApiFilter){
-//
-//        val endDate = when(endD){
-//            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
-//            else -> getNextSevenDaysFormattedDates(endD.num).last()
-//        }
-//
-//
-//        viewModelScope.launch {
-//            try {
-//                val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
-//                    endDate,Constants.API_KEY)
-//                val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
-//                _asteroids.value = list
-//                Log.e("VIEWMODEL-ASTEROIDS:: ",result)
-//                Log.e("VIEWMODEL-ASTEROIDS:: ",list.size.toString())
-//
-//            }catch (e:Exception){
-//                Log.e("getAsteroiuds: " ,e.message.toString())
-//                _asteroids.value = listOf()
-//            }
-//        }
-//    }
 
     /**Database calls*/
 
@@ -102,21 +62,24 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
         }
 
         viewModelScope.launch {
-            val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
-                endDate,Constants.API_KEY)
+            try {
+                val result = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),
+                    endDate,Constants.API_KEY)
 
-            val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
+                val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
 
-            asteroidDao.insertAllAsteroids(list)
-
-            _asteroids.value = list
-
-//            alist = asteroidDao.getAllAsteroids().asLiveData()
+                asteroidDao.insertAllAsteroids(list)
+            }catch (e:Exception){
+                _status.value = e.message
+            }
         }
     }
 
 
-//    fun getAllAsteroids(): LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids().asLiveData()
+    fun getAllAsteroids() {
+
+//        todaysAsteroidsList.value = asteroidDao.getAllAsteroids().asLiveData()
+    }
 
 //    fun getTodayAsteroids(date:String): LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(date)
 
