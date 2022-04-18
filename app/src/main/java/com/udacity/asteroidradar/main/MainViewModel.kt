@@ -13,7 +13,7 @@ import java.lang.Exception
 
 class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
-    var todaysAsteroidsList : LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(getTodaysDate()).asLiveData()
+    lateinit var todaysAsteroidsList : LiveData<List<Asteroid>>
 
     private val _status = MutableLiveData<String>()
     private val status: LiveData<String> = _status
@@ -37,6 +37,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     init {
         getApod()
         getAsteroidsFromApiAndInsertIntoDB(AsteroidApiFilter.SHOW_WEEKLY)
+        getAllAsteroids()
     }
 
     private fun getApod() {
@@ -78,10 +79,12 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
     fun getAllAsteroids() {
 
-//        todaysAsteroidsList.value = asteroidDao.getAllAsteroids().asLiveData()
+        todaysAsteroidsList = asteroidDao.getAllAsteroids().asLiveData()
     }
 
-//    fun getTodayAsteroids(date:String): LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(date)
+    fun getTodayAsteroids() {
+        todaysAsteroidsList = asteroidDao.getTodaysAsteroids(getTodaysDate()).asLiveData()
+    }
 
 //    fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
 

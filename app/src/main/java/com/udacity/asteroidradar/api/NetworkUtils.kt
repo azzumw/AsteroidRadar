@@ -18,8 +18,7 @@ import java.util.*
 
 enum class AsteroidApiFilter(val num:Int) {
     SHOW_TODAY(num = 0),
-    SHOW_WEEKLY(num = 7),
-    SHOW_SAVED(num = 9)
+    SHOW_WEEKLY(num = 7)
 }
 
 
