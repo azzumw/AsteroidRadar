@@ -37,7 +37,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     init {
         getApod()
         getAsteroidsFromApiAndInsertIntoDB(AsteroidApiFilter.SHOW_WEEKLY)
-        getAllAsteroids()
+        getTodayAsteroids()
     }
 
     private fun getApod() {
