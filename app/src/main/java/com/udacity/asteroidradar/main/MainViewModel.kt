@@ -93,6 +93,12 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
         }
     }
 
+    fun getPotentiallyHazardousFromToday(){
+        viewModelScope.launch {
+            _todaysAsteroidsList.value = asteroidDao.getPotentiallyHazardousFromToday(getTodaysDate(),true)
+        }
+    }
+
 //    fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
 
     fun onAsteroidClicked(asteroid: Asteroid) {

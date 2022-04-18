@@ -10,4 +10,7 @@
     <item
         android:id="@+id/show_saved"
         android:title="@string/saved_asteroids" />
+    <item
+        android:id="@+id/show_hazardous_today"
+        android:title="@string/today_hazardous" />
 </menu>

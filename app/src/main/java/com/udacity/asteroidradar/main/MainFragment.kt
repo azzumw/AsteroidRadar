@@ -62,6 +62,7 @@ class MainFragment : Fragment() {
         when(item.itemId){
             R.id.show_today -> viewModel.getTodayAsteroids()
             R.id.show_week ->viewModel.getAllAsteroids()
+            R.id.show_hazardous_today -> viewModel.getPotentiallyHazardousFromToday()
         }
         return true
     }
