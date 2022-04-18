@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar.main
 
-import android.content.ClipData
 import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
@@ -8,14 +7,15 @@ import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AsteroidDao
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.lang.Exception
 
 class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
-    val allasteroids: LiveData<List<Asteroid>> = asteroidDao.getAllAsteroids().asLiveData()
+//    private val _allasteroids = asteroidDao.getTodaysAsteroids(getTodaysDate())
+
+    var alist : LiveData<List<Asteroid>> = asteroidDao.getTodaysAsteroids(getTodaysDate()).asLiveData()
 
     private val _status = MutableLiveData<String>()
     val status: LiveData<String> = _status
@@ -26,6 +26,12 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     private val _photo= MutableLiveData<PictureOfDay>()
     val photo:LiveData<PictureOfDay> = _photo!!
 
+    private val _asteroids = MutableLiveData<List<Asteroid>>()
+    val asteroids get() = _asteroids
+
+    private val _singleAsteroid = MutableLiveData<Asteroid>()
+    val  singleAsteroid get() = _singleAsteroid
+
     val displayTitle = Transformations.map(photo){
         if(it.title.isNullOrEmpty()){
             "No image"
@@ -34,19 +40,16 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
         }
     }
 
-    private val _asteroids = MutableLiveData<List<Asteroid>>()
-    val asteroids get() = _asteroids!!
 
-    private val _singleAsteroid = MutableLiveData<Asteroid>()
-    val  singleAsteroid get() = _singleAsteroid
 
     init {
         getApod()
 //        getAsteroids(AsteroidApiFilter.SHOW_TODAY)
-        insertAsteroidsInDatabase(AsteroidApiFilter.SHOW_TODAY)
+        getAsteroidsFromApiAndInsertIntoDB(AsteroidApiFilter.SHOW_WEEKLY)
 
+//        alist = asteroidDao.getTodaysAsteroids(todayDate = getTodaysDate()).asLiveData()
 
-        Log.e("VIEWMODEL DATABASE:",allasteroids.value?.size.toString())
+        Log.e("DATABASE VM:", alist.value?.size.toString())
 
     }
 
@@ -91,7 +94,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
     /**Database calls*/
 
-    private fun insertAsteroidsInDatabase(endD:AsteroidApiFilter){
+    private fun getAsteroidsFromApiAndInsertIntoDB(endD:AsteroidApiFilter){
 
         val endDate = when(endD){
             AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
@@ -104,9 +107,11 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
             val list = parseAsteroidsJsonResult(JSONObject(result),endD.num)
 
-            asteroids.value = list
-
             asteroidDao.insertAllAsteroids(list)
+
+            _asteroids.value = list
+
+//            alist = asteroidDao.getAllAsteroids().asLiveData()
         }
     }
 
