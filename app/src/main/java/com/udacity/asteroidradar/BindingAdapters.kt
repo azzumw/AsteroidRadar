@@ -63,8 +63,3 @@ fun bindRecyclerView(recyclerView: RecyclerView,
     val adapter = recyclerView.adapter as MainAsteroidAdapter
     adapter.submitList(data)
 }
-
-@BindingAdapter("imageSrc")
-fun bindPotentialHazardousImage(imageView: ImageView,src:Int){
-    imageView.setImageResource(src)
-}

@@ -12,10 +12,10 @@ import kotlinx.coroutines.flow.Flow
 interface AsteroidDao {
 
     @Query("select * from asteroids order by closeApproachDate")
-    fun getAllAsteroids(): Flow<List<Asteroid>>
+    suspend fun getAllAsteroids(): List<Asteroid>
 
     @Query("select * from asteroids where closeApproachDate=:todayDate order by closeApproachDate")
-    fun getTodaysAsteroids(todayDate:String):Flow<List<Asteroid>>
+    suspend fun getTodaysAsteroids(todayDate:String):List<Asteroid>
 
     @Query("select * from asteroids where id=:id")
     fun getAnAsteroid(id:Long):Flow<Asteroid?>

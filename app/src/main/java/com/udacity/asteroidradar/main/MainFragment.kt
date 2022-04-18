@@ -42,7 +42,7 @@ class MainFragment : Fragment() {
 
         viewModel.todaysAsteroidsList.observe(viewLifecycleOwner){
             asteroidAdapter.submitList(it)
-            Log.e("MAIN_FRAG DATA: ",it.size.toString())
+//            Log.e("MAIN_FRAG DATA: ",it.size.toString())
         }
 
         setHasOptionsMenu(true)
