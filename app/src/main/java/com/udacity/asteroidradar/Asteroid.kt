@@ -13,4 +13,6 @@ data class Asteroid(@PrimaryKey val id: Long,
                     val estimatedDiameter: Double,
                     val relativeVelocity: Double,
                     val distanceFromEarth: Double,
-                    val isPotentiallyHazardous: Boolean) : Parcelable
+                    val isPotentiallyHazardous: Boolean) : Parcelable{
+
+                    }
