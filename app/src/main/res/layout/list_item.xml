@@ -59,8 +59,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@{data.potentiallyHazardous? @drawable/ic_status_potentially_hazardous : @drawable/ic_status_normal}"
-            android:layout_marginLeft="60dp"
-            app:layout_constraintStart_toEndOf="@id/guideline"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

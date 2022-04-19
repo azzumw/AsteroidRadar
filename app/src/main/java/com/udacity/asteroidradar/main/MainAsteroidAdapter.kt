@@ -19,7 +19,7 @@ class MainAsteroidAdapter(private val clickListener: AsteroidListener): ListAdap
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainAsteroidViewHolder {
-        return MainAsteroidViewHolder(ListItemBinding.inflate(LayoutInflater.from(parent.context)))
+        return MainAsteroidViewHolder(ListItemBinding.inflate(LayoutInflater.from(parent.context),parent,false))
     }
 
     override fun onBindViewHolder(holder: MainAsteroidViewHolder, position: Int) {
