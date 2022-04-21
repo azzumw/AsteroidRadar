@@ -49,12 +49,12 @@ dependencies {
     implementation "android.arch.navigation:navigation-ui-ktx:1.0.0"
 
     //old
-    implementation "com.squareup.moshi:moshi:1.8.0"
-    implementation "com.squareup.moshi:moshi-kotlin:1.8.0"
+    implementation "com.squareup.moshi:moshi:1.9.3"
+    implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
 
-    implementation "com.squareup.retrofit2:retrofit:2.6.2"
-    implementation "com.squareup.retrofit2:converter-moshi:2.5.0"
-    implementation 'com.squareup.retrofit2:converter-scalars:2.5.0'
+    implementation "com.squareup.retrofit2:retrofit:2.9.0"
+    implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
 
     //
 

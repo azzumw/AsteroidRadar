@@ -26,10 +26,8 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
     val singleAsteroid get() = _singleAsteroid
 
     val displayTitle = Transformations.map(photo) {
-        if (it.title.isEmpty()) {
+        it.title.ifEmpty {
             "No image"
-        } else {
-            it.title
         }
     }
 
@@ -82,7 +80,7 @@ class MainViewModel(private val asteroidDao: AsteroidDao) : ViewModel() {
 
     fun getAllAsteroids() {
         viewModelScope.launch {
-            _todaysAsteroidsList.value = asteroidDao.getAllAsteroids()
+            _todaysAsteroidsList.value = asteroidDao.getAllAsteroids(getTodaysDate())
         }
     }
 

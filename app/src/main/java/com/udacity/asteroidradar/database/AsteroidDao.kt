@@ -11,8 +11,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AsteroidDao {
 
-    @Query("select * from asteroids order by closeApproachDate desc")
-    suspend fun getAllAsteroids(): List<Asteroid>
+    @Query("select * from asteroids where closeApproachDate>=:todayDate order by closeApproachDate desc")
+    suspend fun getAllAsteroids(todayDate:String): List<Asteroid>
 
     @Query("select * from asteroids where closeApproachDate=:todayDate order by closeApproachDate")
     suspend fun getTodaysAsteroids(todayDate:String):List<Asteroid>

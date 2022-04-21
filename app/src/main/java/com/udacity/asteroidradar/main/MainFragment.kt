@@ -29,6 +29,8 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        binding.apod = viewModel.photo.value
+
         val asteroidAdapter =MainAsteroidAdapter(AsteroidListener { asteroid ->
             viewModel.onAsteroidClicked(asteroid)
 
