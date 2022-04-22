@@ -30,7 +30,7 @@ interface AsteroidDao {
     //
 
     @Query("select * from asteroids where closeApproachDate=:todayDate order by closeApproachDate")
-    fun getTodaysAst(todayDate:String):Flow<List<Asteroid>>
+    fun getTodaysAst(todayDate:String):LiveData<List<Asteroid>>
 
     @Query("select * from asteroids where closeApproachDate>=:todayDate order by closeApproachDate desc")
     fun getAll(todayDate:String): Flow<List<Asteroid>>

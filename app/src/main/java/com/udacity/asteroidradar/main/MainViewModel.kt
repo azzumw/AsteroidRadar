@@ -18,7 +18,7 @@ class MainViewModel(application: Application) : ViewModel() {
 
     private val asteroidRepository = AsteroidRepository(AppDatabase.getDatabase(application))
 
-    val asteroidRepolist = asteroidRepository.asteroidList
+    val asteroidRepolist = asteroidRepository.list
 
     private val _status = MutableLiveData<String>()
     private val status: LiveData<String> = _status
