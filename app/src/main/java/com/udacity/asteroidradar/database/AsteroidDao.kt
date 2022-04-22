@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.database
 
+import android.content.ClipData
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
@@ -25,4 +26,12 @@ interface AsteroidDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllAsteroids(asteroids:List<Asteroid>)
+
+    //
+
+    @Query("select * from asteroids where closeApproachDate=:todayDate order by closeApproachDate")
+    fun getTodaysAst(todayDate:String):Flow<List<Asteroid>>
+
+    @Query("select * from asteroids where closeApproachDate>=:todayDate order by closeApproachDate desc")
+    fun getAll(todayDate:String): Flow<List<Asteroid>>
 }
