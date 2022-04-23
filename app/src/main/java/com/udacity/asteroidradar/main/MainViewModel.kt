@@ -21,6 +21,7 @@ class MainViewModel(application: Application) : ViewModel() {
     private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
     private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
+    val todayApod : LiveData<PictureOfDay> = asteroidRepository.todayApod
 
     private var filter: MutableLiveData<Int> = MutableLiveData()
     val filteredAsteroids: LiveData<List<Asteroid>> = filter.switchMap {
@@ -55,27 +56,12 @@ class MainViewModel(application: Application) : ViewModel() {
 
 
     init {
-        getApod()
         refreshDataFromRepository()
         selectFilter(1)
     }
 
     fun selectFilter(selectedFilter: Int) {
         filter.value = selectedFilter
-    }
-
-    private fun getApod() {
-
-        viewModelScope.launch {
-            try {
-                _photo.value =
-                    AsteroidApi.retrofitService.getApod(getTodaysDate(), Constants.API_KEY)
-                _status.value = photo.value!!.url
-
-            } catch (e: Exception) {
-                _status.value = "Failure: ${e.message}"
-            }
-        }
     }
 
     private fun refreshDataFromRepository(){
@@ -88,9 +74,6 @@ class MainViewModel(application: Application) : ViewModel() {
             }
         }
     }
-
-
-//    fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
 
     fun onAsteroidClicked(asteroid: Asteroid) {
         _singleAsteroid.value = asteroid
