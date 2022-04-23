@@ -49,7 +49,7 @@
                 android:textSize="20sp"
                 android:layout_gravity="bottom"
                 android:background="#55010613"
-                android:text="@{viewModel.displayTitle}" />
+                android:text="@{viewModel.todayApod.title}" />
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
