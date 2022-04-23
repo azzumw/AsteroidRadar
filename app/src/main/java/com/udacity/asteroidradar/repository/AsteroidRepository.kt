@@ -31,8 +31,11 @@ class AsteroidRepository(private val database: AppDatabase) {
                 AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
             val apodResult = AsteroidApi.retrofitService.getApod(getTodaysDate(), Constants.API_KEY)
             val parsedList = parseAsteroidsJsonResult(JSONObject(result), endD.num)
+            val parsedApod = parseApod(JSONObject(apodResult))
             database.asteroidDao().insertAllAsteroids(parsedList)
-            database.asteroidDao().insertApod(apodResult)
+            if(parsedApod!= null){
+                database.asteroidDao().insertApod(parsedApod)
+            }
         }
     }
 }

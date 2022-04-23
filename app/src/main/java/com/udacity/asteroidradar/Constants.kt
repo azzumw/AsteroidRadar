@@ -4,6 +4,7 @@ object Constants {
     const val API_KEY_PARAM = "api_key"
     const val START_DATE_PARAM = "start_date"
     const val END_DATE_PARAM = "end_date"
+    //TODO:PLease insert your api key below
     const val API_KEY = "uVG2aKdO78uP7FU1TQq4UHZEsYRG3GGey3N9hDno"
     const val APOD_END_POINT = "planetary/apod"
     const val ASTEROID_END_POINT = "neo/rest/v1/feed"

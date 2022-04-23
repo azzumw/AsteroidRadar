@@ -43,7 +43,7 @@ interface AsteroidApiService {
     suspend fun getApod(
         @Query(Constants.DATE_PARAM) date: String,
         @Query(Constants.API_KEY_PARAM) apiKey: String
-    ): PictureOfDay
+    ): String
 
     @GET(Constants.ASTEROID_END_POINT)
     suspend fun getNeoWs(
@@ -60,6 +60,17 @@ object AsteroidApi {
     val retrofitService2: AsteroidApiService by lazy {
         retrofitAsteroids.create(AsteroidApiService::class.java)
     }
+}
+
+fun parseApod(jsonResult:JSONObject): PictureOfDay? {
+
+    val title = jsonResult.getString("title")
+    val  mediatype = jsonResult.getString("media_type")
+    val url = jsonResult.getString("url")
+    if(!mediatype.equals("image")){
+        return null
+    }
+    return PictureOfDay(title = title, mediaType = mediatype, url = url)
 }
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<Asteroid> {
