@@ -60,6 +60,7 @@ class MainFragment : Fragment() {
             R.id.show_today -> viewModel.selectFilter(1)
             R.id.show_week ->viewModel.selectFilter(2)
             R.id.show_hazardous_today -> viewModel.selectFilter(3)
+            else-> viewModel.selectFilter(2)
         }
         return true
     }

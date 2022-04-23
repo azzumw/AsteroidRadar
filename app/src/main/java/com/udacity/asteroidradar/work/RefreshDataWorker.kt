@@ -10,6 +10,9 @@ import retrofit2.HttpException
 
 class RefreshDataWorker(context:Context,workerParameters: WorkerParameters)
     :CoroutineWorker(context,workerParameters) {
+    companion object{
+        const val WORKNAME = "RefreshDataWorker"
+    }
     override suspend fun doWork(): Result {
         val repository = AsteroidRepository(AppDatabase.getDatabase(applicationContext))
         return try {
