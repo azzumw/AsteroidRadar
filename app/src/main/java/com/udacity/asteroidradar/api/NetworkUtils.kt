@@ -70,7 +70,9 @@ fun parseApod(jsonResult:JSONObject): PictureOfDay? {
     if(!mediatype.equals("image")){
         return null
     }
-    return PictureOfDay(title = title, mediaType = mediatype, url = url)
+
+    return if(mediatype.equals("image"))  PictureOfDay(title = title, mediaType = mediatype, url = url) else null
+//    return PictureOfDay(title = title, mediaType = mediatype, url = url)
 }
 
 fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<Asteroid> {

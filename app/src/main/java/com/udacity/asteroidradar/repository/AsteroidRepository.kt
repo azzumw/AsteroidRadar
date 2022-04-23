@@ -18,7 +18,7 @@ class AsteroidRepository(private val database: AppDatabase) {
         database.asteroidDao().getTodaysAst(getTodaysDate()).asLiveData()
     val todayHazardous: LiveData<List<Asteroid>> =
         database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(), true).asLiveData()
-    val todayApod: LiveData<PictureOfDay> = database.asteroidDao().getApod().asLiveData()
+    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
 
     suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
         val endDate = when (endD) {
@@ -33,9 +33,12 @@ class AsteroidRepository(private val database: AppDatabase) {
             val parsedList = parseAsteroidsJsonResult(JSONObject(result), endD.num)
             val parsedApod = parseApod(JSONObject(apodResult))
             database.asteroidDao().insertAllAsteroids(parsedList)
-            if(parsedApod!= null){
+            parsedApod?.let {
                 database.asteroidDao().insertApod(parsedApod)
             }
+//            if(parsedApod!= null){
+//                database.asteroidDao().insertApod(parsedApod)
+//            }
         }
     }
 }
