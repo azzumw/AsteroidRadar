@@ -1,9 +1,6 @@
 package com.udacity.asteroidradar.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.api.*
@@ -14,14 +11,10 @@ import org.json.JSONObject
 
 class AsteroidRepository(private val database:AppDatabase) {
 
-    var list:LiveData<List<Asteroid>>
+    val asteroids: LiveData<List<Asteroid>> = database.asteroidDao().getAll(getTodaysDate()).asLiveData()
+    val todayAsteroids: LiveData<List<Asteroid>> = database.asteroidDao().getTodaysAst(getTodaysDate()).asLiveData()
+    val todayHazardous: LiveData<List<Asteroid>> = database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(),true).asLiveData()
 
-    private val _asteroidsList = MutableLiveData<List<Asteroid>>()
-    val asteroidList:LiveData<List<Asteroid>> get() = _asteroidsList
-
-    init {
-        list = database.asteroidDao().getTodaysAst(getTodaysDate())
-    }
     suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
         val endDate = when (endD) {
             AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
@@ -33,20 +26,6 @@ class AsteroidRepository(private val database:AppDatabase) {
             val parsedList = parseAsteroidsJsonResult(JSONObject(result), endD.num)
             database.asteroidDao().insertAllAsteroids(parsedList)
         }
-    }
-
-    suspend fun getAllAsteroids() {
-        list = database.asteroidDao().getAll(getTodaysDate()).asLiveData()
-//        _asteroidsList.postValue(database.asteroidDao().getAllAsteroids(getTodaysDate()))
-    }
-
-    suspend fun getTodaysAsteroids() {
-        list = database.asteroidDao().getTodaysAst(getTodaysDate())
-//        _asteroidsList.postValue(database.asteroidDao().getTodaysAsteroids(getTodaysDate()))
-    }
-
-    suspend fun getPotentiallyHazardousFromToday(){
-//        _asteroidsList.postValue(database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(),true))
     }
 
 }

@@ -9,6 +9,7 @@ import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.AsteroidApplication
 import com.udacity.asteroidradar.R
+import com.udacity.asteroidradar.api.getTodaysDate
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -40,10 +41,6 @@ class MainFragment : Fragment() {
 
         binding.asteroidRecycler.adapter = asteroidAdapter
 
-//        viewModel.tempList.observe(viewLifecycleOwner){
-//            Log.e("MAIN TMP: ", it.size.toString())
-//        }
-
         setHasOptionsMenu(true)
 
         return binding.root
@@ -52,6 +49,7 @@ class MainFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_overflow_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
+        Log.e("TODAY DATE:", getTodaysDate())
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -59,9 +57,9 @@ class MainFragment : Fragment() {
          * Make DB queries here
          * */
         when(item.itemId){
-            R.id.show_today -> viewModel.getTodayAsteroids()
-            R.id.show_week ->viewModel.getAllAsteroids()
-            R.id.show_hazardous_today -> viewModel.getPotentiallyHazardousFromToday()
+            R.id.show_today -> viewModel.selectFilter(1)
+            R.id.show_week ->viewModel.selectFilter(2)
+            R.id.show_hazardous_today -> viewModel.selectFilter(3)
         }
         return true
     }

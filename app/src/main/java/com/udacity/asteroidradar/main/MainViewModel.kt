@@ -18,7 +18,25 @@ class MainViewModel(application: Application) : ViewModel() {
 
     private val asteroidRepository = AsteroidRepository(AppDatabase.getDatabase(application))
 
-    val asteroidRepolist = asteroidRepository.list
+    private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
+    private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
+    private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
+
+    private var filter: MutableLiveData<Int> = MutableLiveData()
+    val filteredAsteroids: LiveData<List<Asteroid>> = filter.switchMap {
+        when (it) {
+            1 -> {
+                todayAsteroids
+            }
+            2 -> {
+                allAsteroids
+            }
+            3-> todayHazardous
+            else -> {
+                allAsteroids
+            }
+        }
+    }
 
     private val _status = MutableLiveData<String>()
     private val status: LiveData<String> = _status
@@ -39,7 +57,11 @@ class MainViewModel(application: Application) : ViewModel() {
     init {
         getApod()
         refreshDataFromRepository()
-        getTodayAsteroids()
+        selectFilter(1)
+    }
+
+    fun selectFilter(selectedFilter: Int) {
+        filter.value = selectedFilter
     }
 
     private fun getApod() {
@@ -67,26 +89,6 @@ class MainViewModel(application: Application) : ViewModel() {
         }
     }
 
-    /**Database calls*/
-
-    fun getAllAsteroids() {
-        viewModelScope.launch {
-            asteroidRepository.getAllAsteroids()
-        }
-    }
-
-    //
-    fun getTodayAsteroids() {
-        viewModelScope.launch {
-            asteroidRepository.getTodaysAsteroids()
-        }
-    }
-
-    fun getPotentiallyHazardousFromToday(){
-        viewModelScope.launch {
-            asteroidRepository.getPotentiallyHazardousFromToday()
-        }
-    }
 
 //    fun getAnAsteroid(id:Long):Asteroid = asteroidDao.getAnAsteroid(id)
 

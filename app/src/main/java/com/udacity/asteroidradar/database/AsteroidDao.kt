@@ -1,7 +1,5 @@
 package com.udacity.asteroidradar.database
 
-import android.content.ClipData
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -19,7 +17,7 @@ interface AsteroidDao {
     suspend fun getTodaysAsteroids(todayDate:String):List<Asteroid>
 
     @Query("select * from asteroids where closeApproachDate =:todayDate and isPotentiallyHazardous=:isHaradous ")
-    suspend fun getPotentiallyHazardousFromToday(todayDate: String,isHaradous:Boolean):List<Asteroid>
+    fun getPotentiallyHazardousFromToday(todayDate: String,isHaradous:Boolean):Flow<List<Asteroid>>
 
     @Query("select * from asteroids where id=:id")
     fun getAnAsteroid(id:Long):Flow<Asteroid?>
@@ -30,7 +28,7 @@ interface AsteroidDao {
     //
 
     @Query("select * from asteroids where closeApproachDate=:todayDate order by closeApproachDate")
-    fun getTodaysAst(todayDate:String):LiveData<List<Asteroid>>
+    fun getTodaysAst(todayDate:String):Flow<List<Asteroid>>
 
     @Query("select * from asteroids where closeApproachDate>=:todayDate order by closeApproachDate desc")
     fun getAll(todayDate:String): Flow<List<Asteroid>>
