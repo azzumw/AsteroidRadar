@@ -59,6 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@{data.potentiallyHazardous? @drawable/ic_status_potentially_hazardous : @drawable/ic_status_normal}"
+            android:contentDescription="@{data.potentiallyHazardous? @string/content_description_hazardous_status: @string/content_description_normal_status }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

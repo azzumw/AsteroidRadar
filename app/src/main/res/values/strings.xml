@@ -4,6 +4,8 @@
     <string name="next_week_asteroids">View week asteroids</string>
     <string name="today_asteroids">View today asteroids</string>
     <string name="saved_asteroids">View saved asteroids</string>
+    <string name="today_hazardous">Today\'s hazardous</string>
+
     <string name="close_approach_data_title">Close approach date</string>
     <string name="absolute_magnitude_title">Absolute magnitude</string>
     <string name="estimated_diameter_title">Estimated diameter</string>
@@ -17,7 +19,11 @@
     <string name="astronomical_unit_explanation_button">Astronomical unit definition</string>
     <string name="potentially_hazardous_asteroid_image">Potentially hazardous asteroid image</string>
     <string name="not_hazardous_asteroid_image">Not hazardous asteroid image</string>
+
     <string name="this_is_nasa_s_picture_of_day_showing_nothing_yet">This is NASA\'s picture of day, showing nothing yet</string>
+
     <string name="nasa_picture_of_day_content_description_format">NASA\'s picture of day: %s</string>
-    <string name="today_hazardous">Today\'s hazardous</string>
+    <string name="nasa_picture_of_day_title_content_description_format">NASA\'s picture of day title: %s</string>
+    <string name="content_description_hazardous_status">Image indicating this asteroid is potentially hazardous</string>
+    <string name="content_description_normal_status">Image indicating this asteroid is not hazardous</string>
 </resources>
