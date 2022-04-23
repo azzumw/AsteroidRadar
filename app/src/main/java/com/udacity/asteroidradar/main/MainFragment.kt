@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.AsteroidApplication
 import com.udacity.asteroidradar.R
@@ -16,15 +15,17 @@ class MainFragment : Fragment() {
 
     private lateinit var binding: FragmentMainBinding
 
-    private val viewModel:MainViewModel by activityViewModels{
+    private val viewModel: MainViewModel by activityViewModels {
         MainViewModelFactory(activity?.application as AsteroidApplication)
     }
 //    private val viewModel: MainViewModel by lazy {
 //        ViewModelProvider(this).get(MainViewModel::class.java)
 //    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentMainBinding.inflate(inflater)
 
         binding.lifecycleOwner = this
@@ -33,7 +34,7 @@ class MainFragment : Fragment() {
 
         binding.apod = viewModel.photo.value
 
-        val asteroidAdapter =MainAsteroidAdapter(AsteroidListener { asteroid ->
+        val asteroidAdapter = MainAsteroidAdapter(AsteroidListener { asteroid ->
             viewModel.onAsteroidClicked(asteroid)
 
             findNavController().navigate(R.id.detailFragment)
@@ -56,11 +57,11 @@ class MainFragment : Fragment() {
         /**
          * Make DB queries here
          * */
-        when(item.itemId){
+        when (item.itemId) {
             R.id.show_today -> viewModel.selectFilter(1)
-            R.id.show_week ->viewModel.selectFilter(2)
+            R.id.show_week -> viewModel.selectFilter(2)
             R.id.show_hazardous_today -> viewModel.selectFilter(3)
-            else-> viewModel.selectFilter(2)
+            else -> viewModel.selectFilter(2)
         }
         return true
     }

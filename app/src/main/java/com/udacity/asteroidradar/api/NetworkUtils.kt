@@ -16,7 +16,7 @@ import retrofit2.http.Query
 import java.text.SimpleDateFormat
 import java.util.*
 
-enum class AsteroidApiFilter(val num:Int) {
+enum class AsteroidApiFilter(val num: Int) {
     SHOW_TODAY(num = 0),
     SHOW_WEEKLY(num = 7)
 }
@@ -37,27 +37,32 @@ private val retrofitAsteroids = Retrofit.Builder()
     .build()
 
 
-interface AsteroidApiService{
+interface AsteroidApiService {
 
     @GET(Constants.APOD_END_POINT)
-    suspend fun getApod(@Query(Constants.DATE_PARAM)date:String,@Query(Constants.API_KEY_PARAM) apiKey:String): PictureOfDay
+    suspend fun getApod(
+        @Query(Constants.DATE_PARAM) date: String,
+        @Query(Constants.API_KEY_PARAM) apiKey: String
+    ): PictureOfDay
 
     @GET(Constants.ASTEROID_END_POINT)
-    suspend fun getNeoWs(@Query(Constants.START_DATE_PARAM) startDate:String,
-                         @Query(Constants.END_DATE_PARAM)endDate:String,
-                         @Query(Constants.API_KEY_PARAM) apiKey: String):String
+    suspend fun getNeoWs(
+        @Query(Constants.START_DATE_PARAM) startDate: String,
+        @Query(Constants.END_DATE_PARAM) endDate: String,
+        @Query(Constants.API_KEY_PARAM) apiKey: String
+    ): String
 }
 
-object AsteroidApi{
-    val retrofitService : AsteroidApiService by lazy {
+object AsteroidApi {
+    val retrofitService: AsteroidApiService by lazy {
         retrofitApod.create(AsteroidApiService::class.java)
     }
-    val retrofitService2 : AsteroidApiService by lazy {
+    val retrofitService2: AsteroidApiService by lazy {
         retrofitAsteroids.create(AsteroidApiService::class.java)
     }
 }
 
-fun parseAsteroidsJsonResult(jsonResult: JSONObject,numDays:Int): ArrayList<Asteroid> {
+fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
 
     val asteroidList = ArrayList<Asteroid>()
@@ -83,8 +88,10 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject,numDays:Int): ArrayList<Aste
             val isPotentiallyHazardous = asteroidJson
                 .getBoolean("is_potentially_hazardous_asteroid")
 
-            val asteroid = Asteroid(id, codename, formattedDate, absoluteMagnitude,
-                estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous)
+            val asteroid = Asteroid(
+                id, codename, formattedDate, absoluteMagnitude,
+                estimatedDiameter, relativeVelocity, distanceFromEarth, isPotentiallyHazardous
+            )
             asteroidList.add(asteroid)
         }
     }
@@ -92,7 +99,7 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject,numDays:Int): ArrayList<Aste
     return asteroidList
 }
 
-fun getNextSevenDaysFormattedDates(numOfDays:Int): ArrayList<String> {
+fun getNextSevenDaysFormattedDates(numOfDays: Int): ArrayList<String> {
     val formattedDateList = ArrayList<String>()
 
     val calendar = Calendar.getInstance()
@@ -104,24 +111,24 @@ fun getNextSevenDaysFormattedDates(numOfDays:Int): ArrayList<String> {
 
     }
 
-    for (i in formattedDateList){
-        Log.e("FORMATED DATES: ",formattedDateList.toString())
+    for (i in formattedDateList) {
+        Log.e("FORMATED DATES: ", formattedDateList.toString())
     }
 
     return formattedDateList
 }
 
 
- fun getTodaysDate():String{
-     val date = Calendar.getInstance().time
-     val formatter = SimpleDateFormat(API_QUERY_DATE_FORMAT) //or use getDateInstance()
-     val formatedDate = formatter.format(date)
+fun getTodaysDate(): String {
+    val date = Calendar.getInstance().time
+    val formatter = SimpleDateFormat(API_QUERY_DATE_FORMAT) //or use getDateInstance()
+    val formatedDate = formatter.format(date)
 
-     return formatedDate.toString()
+    return formatedDate.toString()
 
 }
 
-fun getYesterdayDate():String{
+fun getYesterdayDate(): String {
     val cal = Calendar.getInstance()
     val formatter = SimpleDateFormat(API_QUERY_DATE_FORMAT)
     cal.add(Calendar.DATE, -1);

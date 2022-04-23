@@ -13,10 +13,12 @@ import com.udacity.asteroidradar.databinding.FragmentDetailBinding
 import com.udacity.asteroidradar.main.MainViewModel
 
 class DetailFragment : Fragment() {
-    private val viewModel:MainViewModel by activityViewModels()
+    private val viewModel: MainViewModel by activityViewModels()
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val binding = FragmentDetailBinding.inflate(inflater)
 
@@ -33,7 +35,6 @@ class DetailFragment : Fragment() {
 
 
 //        val asteroid = DetailFragmentArgs.fromBundle(arguments!!).selectedAsteroid
-
 
 
 //        binding.closeApproachDate.text = viewModel.singleAsteroid.value?.closeApproachDate

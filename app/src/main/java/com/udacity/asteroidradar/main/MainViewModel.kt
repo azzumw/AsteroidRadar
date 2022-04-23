@@ -1,17 +1,13 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
-import com.udacity.asteroidradar.database.AsteroidDao
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import java.lang.Exception
 
 class MainViewModel(application: Application) : ViewModel() {
@@ -21,7 +17,7 @@ class MainViewModel(application: Application) : ViewModel() {
     private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
     private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
-    val todayApod : LiveData<PictureOfDay> = asteroidRepository.todayApod
+    val todayApod: LiveData<PictureOfDay> = asteroidRepository.todayApod
 
     private var filter: MutableLiveData<Int> = MutableLiveData()
     val filteredAsteroids: LiveData<List<Asteroid>> = filter.switchMap {
@@ -32,7 +28,7 @@ class MainViewModel(application: Application) : ViewModel() {
             2 -> {
                 allAsteroids
             }
-            3-> todayHazardous
+            3 -> todayHazardous
             else -> {
                 allAsteroids
             }
@@ -64,12 +60,12 @@ class MainViewModel(application: Application) : ViewModel() {
         filter.value = selectedFilter
     }
 
-    private fun refreshDataFromRepository(){
+    private fun refreshDataFromRepository() {
 
         viewModelScope.launch {
             try {
                 asteroidRepository.refreshAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
-            }catch (e: Exception) {
+            } catch (e: Exception) {
                 _status.value = e.message
             }
         }

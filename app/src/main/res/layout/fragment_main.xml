@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewModel"
             type="com.udacity.asteroidradar.main.MainViewModel" />
+
         <variable
             name="list"
             type="com.udacity.asteroidradar.main.MainAsteroidAdapter" />
+
         <variable
             name="apod"
             type="com.udacity.asteroidradar.PictureOfDay" />
@@ -33,24 +36,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
+                android:contentDescription="@{@string/nasa_picture_of_day_content_description_format (viewModel.todayApod.title)}"
                 android:scaleType="centerCrop"
                 app:apodImageUrl="@{viewModel.todayApod.url}"
-                android:contentDescription="@{@string/nasa_picture_of_day_content_description_format (viewModel.todayApod.title)}"
-                app:srcCompat="@drawable/placeholder_picture_of_day"/>
+                app:srcCompat="@drawable/placeholder_picture_of_day" />
 
             <TextView
                 android:id="@+id/textView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp"
-                tools:text="@string/app_name"
-                android:textColor="@android:color/white"
-                android:textStyle="bold"
-                android:textSize="20sp"
                 android:layout_gravity="bottom"
                 android:background="#55010613"
+                android:contentDescription="@{@string/nasa_picture_of_day_title_content_description_format (viewModel.todayApod.title)}"
+                android:padding="16dp"
                 android:text="@{viewModel.todayApod.title}"
-                android:contentDescription="@{@string/nasa_picture_of_day_title_content_description_format (viewModel.todayApod.title)}"/>
+                android:textColor="@android:color/white"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                tools:text="@string/app_name" />
         </FrameLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -62,10 +65,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            tools:listitem="@layout/list_item"
-            app:listData="@{viewModel.filteredAsteroids}"
             app:layout_constraintTop_toBottomOf="@+id/activity_main_image_of_the_day_layout"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintVertical_bias="0.0"
+            app:listData="@{viewModel.filteredAsteroids}"
+            tools:listitem="@layout/list_item" />
 
         <ProgressBar
             android:id="@+id/status_loading_wheel"

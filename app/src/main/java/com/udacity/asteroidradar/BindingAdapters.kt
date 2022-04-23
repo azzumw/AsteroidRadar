@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar
 
-import android.media.Image
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.net.toUri
@@ -46,11 +45,11 @@ fun bindTextViewToDisplayVelocity(textView: TextView, number: Double) {
 }
 
 @BindingAdapter("apodImageUrl")
-fun bindApodImage(imgView:ImageView,imgUrl:String?){
+fun bindApodImage(imgView: ImageView, imgUrl: String?) {
     imgUrl?.let {
         // Load the image in the background using Coil.
         val imgUri = imgUrl.toUri().buildUpon().scheme("https").build()
-        imgView.load(imgUri){
+        imgView.load(imgUri) {
             placeholder(R.drawable.loading_animation)
             error(R.drawable.ic_broken_image)
         }
@@ -58,8 +57,10 @@ fun bindApodImage(imgView:ImageView,imgUrl:String?){
 }
 
 @BindingAdapter("listData")
-fun bindRecyclerView(recyclerView: RecyclerView,
-                     data: List<Asteroid>?) {
+fun bindRecyclerView(
+    recyclerView: RecyclerView,
+    data: List<Asteroid>?
+) {
     val adapter = recyclerView.adapter as MainAsteroidAdapter
     adapter.submitList(data)
 }

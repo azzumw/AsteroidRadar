@@ -4,12 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="data"
             type="com.udacity.asteroidradar.Asteroid" />
+
         <variable
             name="viewModel"
             type="com.udacity.asteroidradar.main.MainViewModel" />
+
         <variable
             name="clickListener"
             type="com.udacity.asteroidradar.main.AsteroidListener" />
@@ -25,9 +28,9 @@
             android:id="@+id/top_tv"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
+            android:contentDescription="@{@string/content_description_code_name(data.codename)}"
             android:gravity="center_vertical"
             android:text="@{data.codename}"
-            android:contentDescription="@{@string/content_description_code_name(data.codename)}"
             android:textColor="@color/default_text_color"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -40,9 +43,9 @@
             android:id="@+id/bottom_tv"
             android:layout_width="wrap_content"
             android:layout_height="32dp"
+            android:contentDescription="@{@string/content_description_close_approach_date(data.closeApproachDate)}"
             android:gravity="center_vertical"
             android:text="@{data.closeApproachDate}"
-            android:contentDescription="@{@string/content_description_close_approach_date(data.closeApproachDate)}"
             android:textColor="@color/text_grey"
             android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,11 +63,11 @@
             android:id="@+id/ic_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@{data.potentiallyHazardous? @drawable/ic_status_potentially_hazardous : @drawable/ic_status_normal}"
             android:contentDescription="@{data.potentiallyHazardous? @string/content_description_hazardous_status: @string/content_description_normal_status }"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:statusIcon="@{data.potentiallyHazardous}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

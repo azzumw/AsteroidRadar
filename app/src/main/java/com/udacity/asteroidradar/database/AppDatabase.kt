@@ -8,12 +8,12 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 
 
-@Database(entities = [Asteroid::class,PictureOfDay::class], version = 1, exportSchema = false)
-abstract class AppDatabase:RoomDatabase() {
+@Database(entities = [Asteroid::class, PictureOfDay::class], version = 1, exportSchema = false)
+abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun asteroidDao():AsteroidDao
+    abstract fun asteroidDao(): AsteroidDao
 
-    companion object{
+    companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
 
@@ -22,7 +22,8 @@ abstract class AppDatabase:RoomDatabase() {
                 val instance = Room.databaseBuilder(
                     context,
                     AppDatabase::class.java,
-                    "asteroid_database")
+                    "asteroid_database"
+                )
                     .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance

@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
-class AsteroidApplication:Application() {
+class AsteroidApplication : Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
 
     val applicationScope = CoroutineScope(Dispatchers.Default)
@@ -19,7 +19,7 @@ class AsteroidApplication:Application() {
         delayedInit()
     }
 
-    private fun delayedInit(){
+    private fun delayedInit() {
         applicationScope.launch {
             setupRecurringWork()
         }
@@ -32,16 +32,17 @@ class AsteroidApplication:Application() {
             .setRequiresBatteryNotLow(true)
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .apply {
-                if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setRequiresDeviceIdle(true)
                 }
             }
             .build()
 
-        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(1,TimeUnit.DAYS)
+        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(1, TimeUnit.DAYS)
             .setConstraints(constraints).build()
 
         WorkManager.getInstance().enqueueUniquePeriodicWork(
-            RefreshDataWorker.WORKNAME, ExistingPeriodicWorkPolicy.KEEP,repeatingRequest)
+            RefreshDataWorker.WORKNAME, ExistingPeriodicWorkPolicy.KEEP, repeatingRequest
+        )
     }
 }

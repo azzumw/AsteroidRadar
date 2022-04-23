@@ -28,7 +28,6 @@
     <string name="content_description_close_approach_date">This asteroid is approaching on %s</string>
     <string name="content_description_hazardous_status">Image indicating this asteroid is potentially hazardous</string>
     <string name="content_description_normal_status">Image indicating this asteroid is safe</string>
-
     <string name="content_desciption_astronomical_unit">The absolute magnitude is %s astronomical units</string>
     <string name="content_description_estimated_diameter">The estimated diameter is %s km</string>
     <string name="content_description_relative_velocity">The relative velocity is %s km per second</string>
