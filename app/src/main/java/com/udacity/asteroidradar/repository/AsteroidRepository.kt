@@ -43,6 +43,7 @@ class AsteroidRepository(private val database: AppDatabase) {
 //            database.asteroidDao().insertApod(parsedApod!!)
 
             parsedApod?.let {
+                database.asteroidDao().deleteApods(getTodaysDate())
                 database.asteroidDao().insertApod(parsedApod)
             }
         }

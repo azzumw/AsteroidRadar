@@ -11,6 +11,9 @@ interface AsteroidDao {
     @Query("select * from apod where date=:todayDate")
     fun getApod(todayDate: String): Flow<PictureOfDay>
 
+    @Query("delete from apod where date < :todayDate")
+    fun deleteApods(todayDate: String)
+
 
     @Insert(entity = PictureOfDay::class, onConflict = OnConflictStrategy.REPLACE)
     fun insertApod(apod: PictureOfDay)
