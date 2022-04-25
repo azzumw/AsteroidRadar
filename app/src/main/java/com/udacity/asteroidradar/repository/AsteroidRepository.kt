@@ -20,7 +20,7 @@ class AsteroidRepository(private val database: AppDatabase) {
         database.asteroidDao().getTodaysAst(getTodaysDate()).asLiveData()
     val todayHazardous: LiveData<List<Asteroid>> =
         database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(), true).asLiveData()
-    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod(getTodaysDate()).asLiveData()
+    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
     private val _status = MutableLiveData<String>()
     val status :LiveData<String> = _status
 
@@ -33,14 +33,11 @@ class AsteroidRepository(private val database: AppDatabase) {
         withContext(Dispatchers.IO) {
 
             val resultNeows = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
+            val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
+            database.asteroidDao().insertAllAsteroids(parsedList)
 
             val apodResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
-            val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
-
             val parsedApod = parseApod(JSONObject(apodResult))
-
-            database.asteroidDao().insertAllAsteroids(parsedList)
-//            database.asteroidDao().insertApod(parsedApod!!)
 
             parsedApod?.let {
                 database.asteroidDao().deleteApods(getTodaysDate())

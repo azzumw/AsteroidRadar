@@ -22,6 +22,7 @@ class MainViewModel(application: Application) : ViewModel() {
     val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
 
     val title  = Transformations.map(todayApod){
+
         it?.title ?: "White cosmos"
     }
 

@@ -14,6 +14,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -90,15 +91,22 @@ object AsteroidApi {
 
 fun parseApod(jsonObject:JSONObject): PictureOfDay? {
 
-    val title = jsonObject.getString("title")
-    val  mediatype = jsonObject.getString("media_type")
-    val url = jsonObject.getString("url")
-    val date = jsonObject.getString("date")
-    if(!mediatype.equals("image")){
+    try {
+        val title = jsonObject.getString("title")
+        val  mediatype = jsonObject.getString("media_type")
+        val url = jsonObject.getString("url")
+        val date = jsonObject.getString("date")
+        if(!mediatype.equals("image")){
+            return null
+        }
+        return if(mediatype.equals("image"))  PictureOfDay(title = title, mediaType = mediatype, url = url, date = date) else null
+
+    }catch (e:Exception){
+        Log.e("PARSEAPOD method: ",e.message.toString())
         return null
     }
 
-    return if(mediatype.equals("image"))  PictureOfDay(title = title, mediaType = mediatype, url = url, date = date) else null
+
 //    return PictureOfDay(title = title, mediaType = mediatype, url = url)
 }
 

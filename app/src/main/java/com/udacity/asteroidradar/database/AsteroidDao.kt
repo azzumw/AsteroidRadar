@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AsteroidDao {
 
-    @Query("select * from apod where date=:todayDate")
-    fun getApod(todayDate: String): Flow<PictureOfDay>
+    @Query("select * from apod limit 1")
+    fun getApod(): Flow<PictureOfDay>
 
     @Query("delete from apod where date < :todayDate")
     fun deleteApods(todayDate: String)
