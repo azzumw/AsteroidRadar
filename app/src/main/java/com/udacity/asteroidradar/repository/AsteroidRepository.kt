@@ -1,5 +1,6 @@
 package com.udacity.asteroidradar.repository
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
@@ -18,7 +19,13 @@ class AsteroidRepository(private val database: AppDatabase) {
         database.asteroidDao().getTodaysAst(getTodaysDate()).asLiveData()
     val todayHazardous: LiveData<List<Asteroid>> =
         database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(), true).asLiveData()
-    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
+//    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
+
+    private val _size = MutableLiveData<Int>()
+    val size :LiveData<Int> get() = _size
+
+    private val _apodResult = MutableLiveData<PictureOfDay?>()
+    val apodResult : LiveData<PictureOfDay?> = _apodResult
 
     suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
         val endDate = when (endD) {
@@ -27,18 +34,25 @@ class AsteroidRepository(private val database: AppDatabase) {
         }
 
         withContext(Dispatchers.IO) {
-            val result =
-                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
-            val apodResult = AsteroidApi.retrofitService.getApod(getTodaysDate(), Constants.API_KEY)
-            val parsedList = parseAsteroidsJsonResult(JSONObject(result), endD.num)
-            val parsedApod = parseApod(JSONObject(apodResult))
+            val resultNeows = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
+            _size.value = resultNeows.length
+            val apodResult = AsteroidApi.retrofitService.getApod(Constants.API_KEY)
+            val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
+            _apodResult.value = apodResult
+//            val parsedApod = parseApod(JSONObject(apodResult))
+            Log.e("Ast Repo: ",parsedList.size.toString())
             database.asteroidDao().insertAllAsteroids(parsedList)
-            parsedApod?.let {
-                database.asteroidDao().insertApod(parsedApod)
-            }
+//            parsedApod?.let {
+//                database.asteroidDao().insertApod(parsedApod)
+//            }
 //            if(parsedApod!= null){
 //                database.asteroidDao().insertApod(parsedApod)
 //            }
         }
     }
+
+    fun resultSize(): Int? {
+        return size?.value
+    }
+
 }

@@ -7,6 +7,7 @@ import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.API_QUERY_DATE_FORMAT
 import com.udacity.asteroidradar.PictureOfDay
+import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -41,9 +42,8 @@ interface AsteroidApiService {
 
     @GET(Constants.APOD_END_POINT)
     suspend fun getApod(
-        @Query(Constants.DATE_PARAM) date: String,
         @Query(Constants.API_KEY_PARAM) apiKey: String
-    ): String
+    ): PictureOfDay
 
     @GET(Constants.ASTEROID_END_POINT)
     suspend fun getNeoWs(
@@ -62,11 +62,11 @@ object AsteroidApi {
     }
 }
 
-fun parseApod(jsonResult:JSONObject): PictureOfDay? {
+fun parseApod(jsonObject:JSONObject): PictureOfDay? {
 
-    val title = jsonResult.getString("title")
-    val  mediatype = jsonResult.getString("media_type")
-    val url = jsonResult.getString("url")
+    val title = jsonObject.getString("title")
+    val  mediatype = jsonObject.getString("media_type")
+    val url = jsonObject.getString("url")
     if(!mediatype.equals("image")){
         return null
     }
@@ -109,6 +109,7 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<As
         }
     }
 
+    Log.e("NEtworkUtils",asteroidList.size.toString())
     return asteroidList
 }
 

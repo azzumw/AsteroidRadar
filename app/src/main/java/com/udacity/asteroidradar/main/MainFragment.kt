@@ -32,7 +32,7 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-        binding.apod = viewModel.photo.value
+//        binding.apod = viewModel.apodResult.value
 
         val asteroidAdapter = MainAsteroidAdapter(AsteroidListener { asteroid ->
             viewModel.onAsteroidClicked(asteroid)
@@ -40,8 +40,10 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.detailFragment)
         })
 
-        val size=viewModel.filteredAsteroids.value?.size
-        Log.e("size: ", size.toString())
+//        val size=viewModel.size.value
+//        Log.e("size: ", size.toString())
+//        val apodResult = viewModel.apodResult
+//        Log.e("Apod Result: ",apodResult.toString())
 
         binding.asteroidRecycler.adapter = asteroidAdapter
 

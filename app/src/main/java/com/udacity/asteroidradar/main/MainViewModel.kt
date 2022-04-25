@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
@@ -17,7 +18,9 @@ class MainViewModel(application: Application) : ViewModel() {
     private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
     private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
-    val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
+//    val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
+
+    val apod = asteroidRepository.apodResult
 
     private var filter: MutableLiveData<Int> = MutableLiveData()
     val filteredAsteroids: LiveData<List<Asteroid>> = filter.switchMap {
