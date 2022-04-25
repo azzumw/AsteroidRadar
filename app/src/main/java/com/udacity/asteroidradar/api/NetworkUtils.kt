@@ -1,12 +1,14 @@
 package com.udacity.asteroidradar.api
 
 import android.util.Log
+import androidx.work.WorkRequest
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.API_QUERY_DATE_FORMAT
 import com.udacity.asteroidradar.PictureOfDay
+import com.udacity.asteroidradar.work.RefreshDataWorker
 import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -176,4 +178,7 @@ fun getTodaysDate(): String {
     return formatedDate.toString()
 
 }
+
+fun calculate(i:Int,j:Int):Int= i+j
+
 

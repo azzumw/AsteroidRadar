@@ -8,6 +8,7 @@ import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -21,8 +22,9 @@ class AsteroidRepository(private val database: AppDatabase) {
     val todayHazardous: LiveData<List<Asteroid>> =
         database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(), true).asLiveData()
     val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
-    private val _status = MutableLiveData<String>()
-    val status :LiveData<String> = _status
+
+
+
 
     suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
         val endDate = when (endD) {
@@ -30,7 +32,7 @@ class AsteroidRepository(private val database: AppDatabase) {
             else -> getNextSevenDaysFormattedDates(endD.num).last()
         }
 
-        withContext(Dispatchers.IO) {
+        withContext(IO) {
 
             val resultNeows = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
             val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
@@ -45,6 +47,22 @@ class AsteroidRepository(private val database: AppDatabase) {
             }
         }
     }
+
+    suspend fun getWeeksAsteroids(endD: AsteroidApiFilter){
+        val endDate = when (endD) {
+            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
+            else -> getNextSevenDaysFormattedDates(endD.num).last()}
+
+            withContext(IO) {
+
+                val resultNeows =
+                    AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
+                val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
+                database.asteroidDao().insertAllAsteroids(parsedList)
+
+            }
+        }
+
 
     suspend fun refreshMarsPhotos(){
 

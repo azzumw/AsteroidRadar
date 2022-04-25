@@ -3,14 +3,17 @@ package com.udacity.asteroidradar.main
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.work.*
 import com.udacity.asteroidradar.AsteroidApplication
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.getTodaysDate
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.work.RefreshDataWorker
 
 class MainFragment : Fragment() {
 
@@ -33,6 +36,7 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
+        checkWorkRequestStatus()
 
         val asteroidAdapter = MainAsteroidAdapter(AsteroidListener { asteroid ->
             viewModel.onAsteroidClicked(asteroid)
@@ -68,4 +72,16 @@ class MainFragment : Fragment() {
         }
         return true
     }
+
+    private fun checkWorkRequestStatus() {
+        val workRequest = (requireActivity().application as AsteroidApplication).workRequest
+        WorkManager.getInstance(requireContext().applicationContext)
+            .getWorkInfoByIdLiveData(workRequest.id).observe(viewLifecycleOwner, Observer {
+                if (it.state.isFinished) {
+                    val x = it.outputData.getInt(RefreshDataWorker.DATA_KEY, 0)
+                    Toast.makeText(context, "REFRESH FINISHED:${x}", Toast.LENGTH_LONG).show()
+                }
+            })
+    }
+
 }

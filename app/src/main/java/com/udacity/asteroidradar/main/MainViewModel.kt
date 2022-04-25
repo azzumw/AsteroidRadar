@@ -2,13 +2,18 @@ package com.udacity.asteroidradar.main
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
+import androidx.work.OneTimeWorkRequest
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
+import com.udacity.asteroidradar.work.RefreshDataWorker
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -22,7 +27,7 @@ class MainViewModel(application: Application) : ViewModel() {
     val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
 
     val title  = Transformations.map(todayApod){
-
+        //while/when no image is available
         it?.title ?: "White cosmos"
     }
 
@@ -56,7 +61,6 @@ class MainViewModel(application: Application) : ViewModel() {
 
 
     init {
-//        getMarsPhotos()
         refreshDataFromRepository()
         selectFilter(1)
     }
@@ -69,27 +73,12 @@ class MainViewModel(application: Application) : ViewModel() {
 
         viewModelScope.launch {
             try {
-                asteroidRepository.refreshAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
+                asteroidRepository.refreshAsteroids(AsteroidApiFilter.SHOW_TODAY)
 
             } catch (e: Exception) {
                 _status.value = e.message
             }
         }
-    }
-
-    private fun getMarsPhotos(){
-        viewModelScope.launch {
-            try {
-//                val result = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
-//                _status.value = result
-                asteroidRepository.refreshMarsPhotos()
-                _status.value = asteroidRepository.status.value
-//                _status.value = asteroidRepository.status.value
-            } catch (e: Exception) {
-                _status.value = "Faillure: ${e.message}"
-            }
-        }
-
     }
 
     fun onAsteroidClicked(asteroid: Asteroid) {

@@ -33,7 +33,6 @@
             app:layout_constraintTop_toTopOf="parent">
 
 
-<!--            app:apodImageUrl="@{viewModel.todayApod.url}"-->
             <ImageView
                 android:id="@+id/activity_main_image_of_the_day"
                 android:layout_width="match_parent"
