@@ -26,9 +26,20 @@ enum class AsteroidApiFilter(val num: Int) {
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory())
     .build()
 
-private val retrofitApod = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
+//private val retrofitApod = Retrofit.Builder()
+//    .addConverterFactory(MoshiConverterFactory.create(moshi))
+//    .baseUrl(Constants.BASE_URL)
+//    .build()
+
+private val retrofitApodScalar = Retrofit.Builder()
+    .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(Constants.BASE_URL)
+    .build()
+
+
+private val retroMars = Retrofit.Builder()
+    .addConverterFactory(ScalarsConverterFactory.create())
+    .baseUrl(Constants.BASE_URL_MARS)
     .build()
 
 
@@ -37,13 +48,20 @@ private val retrofitAsteroids = Retrofit.Builder()
     .baseUrl(Constants.BASE_URL)
     .build()
 
+//interface MarsApiService {
+//    @GET("photos")
+//    suspend fun getPhotos():String
+//}
+
 
 interface AsteroidApiService {
 
     @GET(Constants.APOD_END_POINT)
     suspend fun getApod(
         @Query(Constants.API_KEY_PARAM) apiKey: String
-    ): PictureOfDay
+    ): String
+
+
 
     @GET(Constants.ASTEROID_END_POINT)
     suspend fun getNeoWs(
@@ -54,12 +72,20 @@ interface AsteroidApiService {
 }
 
 object AsteroidApi {
-    val retrofitService: AsteroidApiService by lazy {
-        retrofitApod.create(AsteroidApiService::class.java)
+//    val retrofitService: AsteroidApiService by lazy {
+//        retrofitApod.create(AsteroidApiService::class.java)
+//    }
+
+    val retrofitServiceScalar: AsteroidApiService by lazy {
+        retrofitApodScalar.create(AsteroidApiService::class.java)
     }
     val retrofitService2: AsteroidApiService by lazy {
         retrofitAsteroids.create(AsteroidApiService::class.java)
     }
+
+//    val retroMarsObject:MarsApiService by lazy {
+//        retroMars.create(MarsApiService::class.java)
+//    }
 }
 
 fun parseApod(jsonObject:JSONObject): PictureOfDay? {
@@ -67,11 +93,12 @@ fun parseApod(jsonObject:JSONObject): PictureOfDay? {
     val title = jsonObject.getString("title")
     val  mediatype = jsonObject.getString("media_type")
     val url = jsonObject.getString("url")
+    val date = jsonObject.getString("date")
     if(!mediatype.equals("image")){
         return null
     }
 
-    return if(mediatype.equals("image"))  PictureOfDay(title = title, mediaType = mediatype, url = url) else null
+    return if(mediatype.equals("image"))  PictureOfDay(title = title, mediaType = mediatype, url = url, date = date) else null
 //    return PictureOfDay(title = title, mediaType = mediatype, url = url)
 }
 
@@ -142,24 +169,3 @@ fun getTodaysDate(): String {
 
 }
 
-fun getYesterdayDate(): String {
-    val cal = Calendar.getInstance()
-    val formatter = SimpleDateFormat(API_QUERY_DATE_FORMAT)
-    cal.add(Calendar.DATE, -1);
-    val date = formatter.format(cal.time)
-
-    return date.toString()
-}
-
-//fun buildURL():String{
-//    val url = Constants.BASE_URL.toUri().buildUpon()
-//        .scheme("https")
-//        .appendPath(Constants.PLANETARY)
-//        .appendPath(Constants.APOD)
-//        .appendQueryParameter(Constants.DATE_PARAM, getTodaysDate())
-//        .appendQueryParameter(Constants.API_KEY_PARAM,Constants.API_KEY)
-//
-//    Log.e("URL:",url.toString())
-//    return  url.toString()
-//
-//}

@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.AsteroidApplication
 import com.udacity.asteroidradar.R
@@ -32,7 +33,6 @@ class MainFragment : Fragment() {
 
         binding.viewModel = viewModel
 
-//        binding.apod = viewModel.apodResult.value
 
         val asteroidAdapter = MainAsteroidAdapter(AsteroidListener { asteroid ->
             viewModel.onAsteroidClicked(asteroid)
@@ -40,14 +40,12 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.detailFragment)
         })
 
-//        val size=viewModel.size.value
-//        Log.e("size: ", size.toString())
-//        val apodResult = viewModel.apodResult
-//        Log.e("Apod Result: ",apodResult.toString())
 
         binding.asteroidRecycler.adapter = asteroidAdapter
 
         setHasOptionsMenu(true)
+
+        Log.e("TODAY DATE:", getTodaysDate())
 
         return binding.root
     }
@@ -55,7 +53,7 @@ class MainFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.main_overflow_menu, menu)
         super.onCreateOptionsMenu(menu, inflater)
-        Log.e("TODAY DATE:", getTodaysDate())
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

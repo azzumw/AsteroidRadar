@@ -10,6 +10,10 @@
             type="com.udacity.asteroidradar.main.MainViewModel" />
 
         <variable
+            name="apod"
+            type="com.udacity.asteroidradar.PictureOfDay" />
+
+        <variable
             name="list"
             type="com.udacity.asteroidradar.main.MainAsteroidAdapter" />
 
@@ -28,14 +32,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
+<!--            app:apodImageUrl="@{viewModel.todayApod.url}"-->
             <ImageView
                 android:id="@+id/activity_main_image_of_the_day"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:contentDescription="@{@string/nasa_picture_of_day_content_description_format (viewModel.apod.title)}"
+                android:contentDescription="@{@string/nasa_picture_of_day_content_description_format (viewModel.todayApod.title)}"
+                app:apodImageUrl="@{viewModel.todayApod.url}"
                 android:scaleType="centerCrop"
-                app:apodImageUrl="@{viewModel.apod.url}"
                 app:srcCompat="@drawable/placeholder_picture_of_day" />
 
             <TextView
@@ -44,9 +50,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:background="#55010613"
-                android:contentDescription="@{@string/nasa_picture_of_day_title_content_description_format (viewModel.apod.title)}"
+                android:contentDescription="@{@string/nasa_picture_of_day_title_content_description_format (viewModel.todayApod.title)}"
                 android:padding="16dp"
-                android:text="@{viewModel.apod.title}"
+                android:text="@{viewModel.todayApod.title}"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"

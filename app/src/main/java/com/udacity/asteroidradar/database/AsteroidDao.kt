@@ -1,9 +1,6 @@
 package com.udacity.asteroidradar.database
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 import kotlinx.coroutines.flow.Flow
@@ -11,8 +8,9 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AsteroidDao {
 
-    @Query("select * from apod")
-    fun getApod(): Flow<PictureOfDay>
+    @Query("select * from apod where date=:todayDate")
+    fun getApod(todayDate: String): Flow<PictureOfDay>
+
 
     @Insert(entity = PictureOfDay::class, onConflict = OnConflictStrategy.REPLACE)
     fun insertApod(apod: PictureOfDay)

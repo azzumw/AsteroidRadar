@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
@@ -18,9 +19,8 @@ class MainViewModel(application: Application) : ViewModel() {
     private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
     private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
-//    val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
+    val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
 
-    val apod = asteroidRepository.apodResult
 
     private var filter: MutableLiveData<Int> = MutableLiveData()
     val filteredAsteroids: LiveData<List<Asteroid>> = filter.switchMap {
@@ -39,7 +39,8 @@ class MainViewModel(application: Application) : ViewModel() {
     }
 
     private val _status = MutableLiveData<String>()
-    private val status: LiveData<String> = _status
+    val status: LiveData<String> = _status
+
 
     private val _photo = MutableLiveData<PictureOfDay>()
     val photo: LiveData<PictureOfDay> = _photo
@@ -47,14 +48,10 @@ class MainViewModel(application: Application) : ViewModel() {
     private val _singleAsteroid = MutableLiveData<Asteroid>()
     val singleAsteroid get() = _singleAsteroid
 
-    val displayTitle = Transformations.map(photo) {
-        it.title.ifEmpty {
-            "No image"
-        }
-    }
 
 
     init {
+//        getMarsPhotos()
         refreshDataFromRepository()
         selectFilter(1)
     }
@@ -68,10 +65,26 @@ class MainViewModel(application: Application) : ViewModel() {
         viewModelScope.launch {
             try {
                 asteroidRepository.refreshAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
+
             } catch (e: Exception) {
                 _status.value = e.message
             }
         }
+    }
+
+    private fun getMarsPhotos(){
+        viewModelScope.launch {
+            try {
+//                val result = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
+//                _status.value = result
+                asteroidRepository.refreshMarsPhotos()
+                _status.value = asteroidRepository.status.value
+//                _status.value = asteroidRepository.status.value
+            } catch (e: Exception) {
+                _status.value = "Faillure: ${e.message}"
+            }
+        }
+
     }
 
     fun onAsteroidClicked(asteroid: Asteroid) {

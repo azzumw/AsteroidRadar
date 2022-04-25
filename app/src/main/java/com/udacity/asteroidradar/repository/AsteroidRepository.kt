@@ -8,6 +8,7 @@ import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
@@ -19,13 +20,9 @@ class AsteroidRepository(private val database: AppDatabase) {
         database.asteroidDao().getTodaysAst(getTodaysDate()).asLiveData()
     val todayHazardous: LiveData<List<Asteroid>> =
         database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(), true).asLiveData()
-//    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
-
-    private val _size = MutableLiveData<Int>()
-    val size :LiveData<Int> get() = _size
-
-    private val _apodResult = MutableLiveData<PictureOfDay?>()
-    val apodResult : LiveData<PictureOfDay?> = _apodResult
+    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod(getTodaysDate()).asLiveData()
+    private val _status = MutableLiveData<String>()
+    val status :LiveData<String> = _status
 
     suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
         val endDate = when (endD) {
@@ -34,25 +31,38 @@ class AsteroidRepository(private val database: AppDatabase) {
         }
 
         withContext(Dispatchers.IO) {
+
             val resultNeows = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
-            _size.value = resultNeows.length
-            val apodResult = AsteroidApi.retrofitService.getApod(Constants.API_KEY)
+
+            val apodResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
             val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
-            _apodResult.value = apodResult
-//            val parsedApod = parseApod(JSONObject(apodResult))
-            Log.e("Ast Repo: ",parsedList.size.toString())
+
+            val parsedApod = parseApod(JSONObject(apodResult))
+
             database.asteroidDao().insertAllAsteroids(parsedList)
-//            parsedApod?.let {
-//                database.asteroidDao().insertApod(parsedApod)
-//            }
-//            if(parsedApod!= null){
-//                database.asteroidDao().insertApod(parsedApod)
-//            }
+//            database.asteroidDao().insertApod(parsedApod!!)
+
+            parsedApod?.let {
+                database.asteroidDao().insertApod(parsedApod)
+            }
         }
     }
 
-    fun resultSize(): Int? {
-        return size?.value
+    suspend fun refreshMarsPhotos(){
+
+//        withContext(Dispatchers.IO){
+//            val listResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
+//            val parsedApod = parseApod(JSONObject(listResult))
+//            parsedApod?.let {
+//                database.asteroidDao().insertApod(parsedApod)
+//            }
+//        }
+
+//        coroutineScope {
+//            val listResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
+//            _status.value = listResult
+//
+//        }
     }
 
 }

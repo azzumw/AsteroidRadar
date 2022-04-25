@@ -10,10 +10,6 @@
             type="com.udacity.asteroidradar.Asteroid" />
 
         <variable
-            name="viewModel"
-            type="com.udacity.asteroidradar.main.MainViewModel" />
-
-        <variable
             name="clickListener"
             type="com.udacity.asteroidradar.main.AsteroidListener" />
     </data>
