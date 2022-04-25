@@ -52,7 +52,7 @@
                 android:background="#55010613"
                 android:contentDescription="@{@string/nasa_picture_of_day_title_content_description_format (viewModel.todayApod.title)}"
                 android:padding="16dp"
-                android:text="@{viewModel.todayApod.title}"
+                android:text="@{viewModel.title}"
                 android:textColor="@android:color/white"
                 android:textSize="20sp"
                 android:textStyle="bold"

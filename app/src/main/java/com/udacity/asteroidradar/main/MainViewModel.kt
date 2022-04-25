@@ -21,6 +21,10 @@ class MainViewModel(application: Application) : ViewModel() {
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
     val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
 
+    val title  = Transformations.map(todayApod){
+        it?.title ?: "White cosmos"
+    }
+
 
     private var filter: MutableLiveData<Int> = MutableLiveData()
     val filteredAsteroids: LiveData<List<Asteroid>> = filter.switchMap {
