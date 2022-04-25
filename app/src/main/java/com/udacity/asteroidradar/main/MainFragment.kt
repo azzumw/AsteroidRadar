@@ -40,6 +40,9 @@ class MainFragment : Fragment() {
             findNavController().navigate(R.id.detailFragment)
         })
 
+        val size=viewModel.filteredAsteroids.value?.size
+        Log.e("size: ", size.toString())
+
         binding.asteroidRecycler.adapter = asteroidAdapter
 
         setHasOptionsMenu(true)

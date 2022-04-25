@@ -35,4 +35,7 @@ interface AsteroidDao {
 
     @Query("select * from asteroids where closeApproachDate>=:todayDate order by closeApproachDate desc")
     fun getAll(todayDate: String): Flow<List<Asteroid>>
+
+//    @Query("delete from asteroids where closeApproachDate <:todayDate")
+//    fun deletePreviousAsteroids(todayDate: String)
 }

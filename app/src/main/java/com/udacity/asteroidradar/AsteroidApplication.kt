@@ -16,7 +16,7 @@ class AsteroidApplication : Application() {
     val applicationScope = CoroutineScope(Dispatchers.Default)
     override fun onCreate() {
         super.onCreate()
-        delayedInit()
+//        delayedInit()
     }
 
     private fun delayedInit() {
@@ -30,7 +30,7 @@ class AsteroidApplication : Application() {
         val constraints = Constraints.Builder()
             .setRequiresCharging(true)
             .setRequiresBatteryNotLow(true)
-            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .setRequiredNetworkType(NetworkType.UNMETERED)
             .apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setRequiresDeviceIdle(true)
@@ -38,11 +38,20 @@ class AsteroidApplication : Application() {
             }
             .build()
 
+        val batterLowConstraints = Constraints.Builder().setRequiresBatteryNotLow(true).build()
+
         val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(1, TimeUnit.DAYS)
             .setConstraints(constraints).build()
 
-        WorkManager.getInstance().enqueueUniquePeriodicWork(
-            RefreshDataWorker.WORKNAME, ExistingPeriodicWorkPolicy.KEEP, repeatingRequest
-        )
+//        val deleteRepeatRequest = PeriodicWorkRequestBuilder<DeletePreviousDataWorker>(1, TimeUnit.DAYS)
+//            .setConstraints(batterLowConstraints).build()
+
+        val workManager = WorkManager.getInstance()
+
+        workManager.enqueueUniquePeriodicWork(RefreshDataWorker.WORKNAME,ExistingPeriodicWorkPolicy.KEEP,repeatingRequest)
+
+//        workManager.enqueueUniquePeriodicWork(DeletePreviousDataWorker.DELETEWORKNAME,ExistingPeriodicWorkPolicy.KEEP,deleteRepeatRequest)
+
+
     }
 }
