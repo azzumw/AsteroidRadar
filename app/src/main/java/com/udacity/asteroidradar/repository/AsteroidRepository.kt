@@ -24,8 +24,6 @@ class AsteroidRepository(private val database: AppDatabase) {
     val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
 
 
-
-
     suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
         val endDate = when (endD) {
             AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
