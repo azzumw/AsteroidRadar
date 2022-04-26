@@ -1,18 +1,14 @@
 package com.udacity.asteroidradar.api
 
 import android.util.Log
-import androidx.work.WorkRequest
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.API_QUERY_DATE_FORMAT
 import com.udacity.asteroidradar.PictureOfDay
-import com.udacity.asteroidradar.work.RefreshDataWorker
-import org.json.JSONArray
 import org.json.JSONObject
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -85,20 +81,25 @@ object AsteroidApi {
     }
 }
 
-fun parseApod(jsonObject:JSONObject): PictureOfDay? {
+fun parseApod(jsonObject: JSONObject): PictureOfDay? {
 
     try {
         val title = jsonObject.getString("title")
-        val  mediatype = jsonObject.getString("media_type")
+        val mediatype = jsonObject.getString("media_type")
         val url = jsonObject.getString("url")
         val date = jsonObject.getString("date")
-        if(!mediatype.equals("image")){
+        if (!mediatype.equals("image")) {
             return null
         }
-        return if(mediatype.equals("image"))  PictureOfDay(title = title, mediaType = mediatype, url = url, date = date) else null
+        return if (mediatype.equals("image")) PictureOfDay(
+            title = title,
+            mediaType = mediatype,
+            url = url,
+            date = date
+        ) else null
 
-    }catch (e:Exception){
-        Log.e("PARSEAPOD method: ",e.message.toString())
+    } catch (e: Exception) {
+        Log.e("PARSEAPOD method: ", e.message.toString())
         return null
     }
 }
@@ -137,7 +138,7 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<As
         }
     }
 
-    Log.e("NEtworkUtils",asteroidList.size.toString())
+    Log.e("NetworkUtils", asteroidList.size.toString())
     return asteroidList
 }
 
@@ -170,6 +171,6 @@ fun getTodaysDate(): String {
 
 }
 
-fun calculate(i:Int,j:Int):Int= i+j
+fun calculate(i: Int, j: Int): Int = i + j
 
 

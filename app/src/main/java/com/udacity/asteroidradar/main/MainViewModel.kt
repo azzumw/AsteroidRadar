@@ -1,19 +1,13 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
-import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
-import androidx.work.OneTimeWorkRequest
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
 import com.udacity.asteroidradar.Asteroid
-import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
+import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
-import com.udacity.asteroidradar.work.RefreshDataWorker
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -26,9 +20,9 @@ class MainViewModel(application: Application) : ViewModel() {
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous
     val todayApod: LiveData<PictureOfDay?> = asteroidRepository.todayApod
 
-    val title  = Transformations.map(todayApod){
+    val title = Transformations.map(todayApod) {
         //while/when no image is available
-        it?.title ?: "White cosmos"
+        it?.title ?: application.applicationContext.getString(R.string.no_image_title)
     }
 
 
@@ -51,14 +45,8 @@ class MainViewModel(application: Application) : ViewModel() {
     private val _status = MutableLiveData<String>()
     val status: LiveData<String> = _status
 
-
-    private val _photo = MutableLiveData<PictureOfDay>()
-    val photo: LiveData<PictureOfDay> = _photo
-
     private val _singleAsteroid = MutableLiveData<Asteroid>()
     val singleAsteroid get() = _singleAsteroid
-
-
 
     init {
         refreshDataFromRepository()
