@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -42,6 +43,17 @@ class MainFragment : Fragment() {
             viewModel.onAsteroidClicked(asteroid)
 
             findNavController().navigate(R.id.detailFragment)
+        })
+
+        viewModel.filteredAsteroids.observe(viewLifecycleOwner, Observer {
+            if(it.isEmpty()){
+                //show textview
+                binding.noDataMessage.isVisible = true
+                binding.asteroidRecycler.isVisible = false
+            }else{
+                binding.noDataMessage.isVisible = false
+                binding.asteroidRecycler.isVisible = true
+            }
         })
 
 
