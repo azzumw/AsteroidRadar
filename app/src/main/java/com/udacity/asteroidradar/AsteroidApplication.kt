@@ -21,14 +21,14 @@ class AsteroidApplication : Application() {
 
     val periodicWorkRequest: PeriodicWorkRequest by lazy {
         /**If you want to test intervals please update param repeatInterval, and TimeUnit**/
-        PeriodicWorkRequestBuilder<RefreshDataWorker>(1, TimeUnit.DAYS)
+        PeriodicWorkRequestBuilder<RefreshDataWorker>(15, TimeUnit.MINUTES)
             .setInitialDelay(10, TimeUnit.SECONDS)
             .setConstraints(getConstraints())
-//            .setBackoffCriteria(
-//                BackoffPolicy.LINEAR,
-//                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
-//                TimeUnit.MILLISECONDS
-//            )
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            )
             .build()
     }
 
@@ -46,16 +46,16 @@ class AsteroidApplication : Application() {
     }
 
     private fun refreshRequest() {
-        WorkManager.getInstance().enqueue(periodicWorkRequest)
-//        WorkManager.getInstance().enqueueUniquePeriodicWork(
-//            RefreshDataWorker.WORKNAME,
-//            ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
-//        )
+//        WorkManager.getInstance().enqueue(periodicWorkRequest)
+        WorkManager.getInstance().enqueueUniquePeriodicWork(
+            RefreshDataWorker.WORKNAME,
+            ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
+        )
     }
 
     private fun getConstraints(): Constraints {
-        val constraints = Constraints.Builder()
-            .setRequiresBatteryNotLow(true)
+        return Constraints.Builder()
+//            .setRequiresBatteryNotLow(true)
             .setRequiresCharging(true)
             .setRequiredNetworkType(NetworkType.CONNECTED)
             //            .apply {
@@ -64,6 +64,5 @@ class AsteroidApplication : Application() {
             //                }
             //            }
             .build()
-        return constraints
     }
 }
