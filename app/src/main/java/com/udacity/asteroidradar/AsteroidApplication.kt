@@ -46,11 +46,11 @@ class AsteroidApplication : Application() {
     }
 
     private fun refreshRequest() {
-        WorkManager.getInstance().enqueue(periodicWorkRequest)
-//        WorkManager.getInstance().enqueueUniquePeriodicWork(
-//            RefreshDataWorker.WORKNAME,
-//            ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
-//        )
+//        WorkManager.getInstance().enqueue(periodicWorkRequest)
+        WorkManager.getInstance().enqueueUniquePeriodicWork(
+            RefreshDataWorker.WORKNAME,
+            ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
+        )
     }
 
     private fun getConstraints(): Constraints {

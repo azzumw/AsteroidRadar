@@ -6,6 +6,7 @@ import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.Constants.API_QUERY_DATE_FORMAT
+import com.udacity.asteroidradar.Constants.DEFAULT_END_DATE_DAYS
 import com.udacity.asteroidradar.PictureOfDay
 import org.json.JSONObject
 import retrofit2.Retrofit
@@ -60,10 +61,16 @@ interface AsteroidApiService {
         @Query(Constants.API_KEY_PARAM) apiKey: String
     ): String
 
+//    @GET(Constants.ASTEROID_END_POINT)
+//    suspend fun getNeoWs(
+//        @Query(Constants.START_DATE_PARAM) startDate: String,
+//        @Query(Constants.END_DATE_PARAM) endDate: String,
+//        @Query(Constants.API_KEY_PARAM) apiKey: String
+//    ): String
+
     @GET(Constants.ASTEROID_END_POINT)
     suspend fun getNeoWs(
         @Query(Constants.START_DATE_PARAM) startDate: String,
-        @Query(Constants.END_DATE_PARAM) endDate: String,
         @Query(Constants.API_KEY_PARAM) apiKey: String
     ): String
 }
@@ -104,12 +111,12 @@ fun parseApod(jsonObject: JSONObject): PictureOfDay? {
     }
 }
 
-fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<Asteroid> {
+fun parseAsteroidsJsonResult(jsonResult: JSONObject): ArrayList<Asteroid> {
     val nearEarthObjectsJson = jsonResult.getJSONObject("near_earth_objects")
 
     val asteroidList = ArrayList<Asteroid>()
 
-    val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates(numDays)
+    val nextSevenDaysFormattedDates = getNextSevenDaysFormattedDates()
     for (formattedDate in nextSevenDaysFormattedDates) {
         val dateAsteroidJsonArray = nearEarthObjectsJson.getJSONArray(formattedDate)
         Log.e("dateAsteroidJsonArray: ", dateAsteroidJsonArray.length().toString())
@@ -142,11 +149,11 @@ fun parseAsteroidsJsonResult(jsonResult: JSONObject, numDays: Int): ArrayList<As
     return asteroidList
 }
 
-fun getNextSevenDaysFormattedDates(numOfDays: Int): ArrayList<String> {
+fun getNextSevenDaysFormattedDates(): ArrayList<String> {
     val formattedDateList = ArrayList<String>()
 
     val calendar = Calendar.getInstance()
-    for (i in 0..numOfDays) {
+    for (i in 0..DEFAULT_END_DATE_DAYS) {
         val currentTime = calendar.time
         val dateFormat = SimpleDateFormat(API_QUERY_DATE_FORMAT, Locale.getDefault())
         formattedDateList.add(dateFormat.format(currentTime))

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
-import com.udacity.asteroidradar.api.AsteroidApiFilter
 import com.udacity.asteroidradar.api.calculate
 import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
@@ -22,7 +21,7 @@ class RefreshDataWorker(private val context: Context, workerParameters: WorkerPa
         val repository = AsteroidRepository(AppDatabase.getDatabase(applicationContext))
 
         return try {
-            repository.getWeeksAsteroids(AsteroidApiFilter.SHOW_WEEKLY)
+            repository.getAsteroids()
 
             val x = calculate(2, 5)
             val output = Data.Builder().putInt(DATA_KEY, x).build()

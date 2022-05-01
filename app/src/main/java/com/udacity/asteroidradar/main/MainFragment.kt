@@ -13,7 +13,9 @@ import androidx.work.*
 import com.udacity.asteroidradar.AsteroidApplication
 import com.udacity.asteroidradar.R
 import com.udacity.asteroidradar.api.getTodaysDate
+import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
+import com.udacity.asteroidradar.repository.AsteroidRepository
 import com.udacity.asteroidradar.work.RefreshDataWorker
 
 class MainFragment : Fragment() {
@@ -21,7 +23,8 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
 
     private val viewModel: MainViewModel by activityViewModels {
-        MainViewModelFactory(activity?.application as AsteroidApplication)
+        MainViewModelFactory(activity?.application as AsteroidApplication, AsteroidRepository(
+            AppDatabase.getDatabase(requireContext())))
     }
 //    private val viewModel: MainViewModel by lazy {
 //        ViewModelProvider(this).get(MainViewModel::class.java)

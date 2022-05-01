@@ -5,15 +5,15 @@ import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.R
-import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
+import com.udacity.asteroidradar.repository.Repository
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class MainViewModel(application: Application) : ViewModel() {
+class MainViewModel(application: Application, private val asteroidRepository: Repository) : ViewModel() {
 
-    private val asteroidRepository = AsteroidRepository(AppDatabase.getDatabase(application))
+//    private val asteroidRepository = AsteroidRepository(AppDatabase.getDatabase(application))
 
     private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
     private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
@@ -49,7 +49,8 @@ class MainViewModel(application: Application) : ViewModel() {
     val singleAsteroid get() = _singleAsteroid
 
     init {
-        refreshDataFromRepository()
+        getApod()
+        getAsteroids()
         selectFilter(1)
     }
 
@@ -57,11 +58,22 @@ class MainViewModel(application: Application) : ViewModel() {
         filter.value = selectedFilter
     }
 
-    private fun refreshDataFromRepository() {
+    private fun getApod() {
+        viewModelScope.launch {
+            try {
+                asteroidRepository.getApod()
+            } catch (e: Exception) {
+
+            }
+        }
+
+    }
+
+    private fun getAsteroids() {
 
         viewModelScope.launch {
             try {
-                asteroidRepository.refreshAsteroids(AsteroidApiFilter.SHOW_TODAY)
+                asteroidRepository.getAsteroids()
 
             } catch (e: Exception) {
                 _status.value = e.message
