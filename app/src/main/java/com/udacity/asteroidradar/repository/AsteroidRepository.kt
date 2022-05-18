@@ -34,22 +34,6 @@ class AsteroidRepository(private val database: AppDatabase):Repository {
 
     }
 
-//    suspend fun getAsteroids(endD: AsteroidApiFilter) {
-//        val endDate = when (endD) {
-//            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
-//            else -> getNextSevenDaysFormattedDates(endD.num).last()
-//        }
-//
-//        withContext(IO) {
-//
-//            val resultNeows =
-//                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
-//            val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
-//            database.asteroidDao().insertAllAsteroids(parsedList)
-//
-//        }
-//    }
-
     override suspend fun getAsteroids() {
 
         withContext(IO) {
