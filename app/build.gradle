@@ -92,7 +92,9 @@ dependencies {
 //    implementation("androidx.work:work-runtime-ktx:2.0.0")
 
     //work
-    implementation "androidx.work:work-runtime-ktx:2.4.0"
+//    implementation "androidx.work:work-runtime-ktx:2.4.0"
+    implementation("androidx.work:work-runtime-ktx:2.5.0")
+
 
     // AndroidX Test - JVM testing
     testImplementation "androidx.test:core-ktx:1.4.0"

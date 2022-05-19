@@ -26,9 +26,6 @@ class MainFragment : Fragment() {
         MainViewModelFactory(activity?.application as AsteroidApplication, AsteroidRepository(
             AppDatabase.getDatabase(requireContext())))
     }
-//    private val viewModel: MainViewModel by lazy {
-//        ViewModelProvider(this).get(MainViewModel::class.java)
-//    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,8 +61,6 @@ class MainFragment : Fragment() {
 
         setHasOptionsMenu(true)
 
-        Log.e("TODAY DATE:", getTodaysDate())
-
         return binding.root
     }
 
@@ -89,13 +84,11 @@ class MainFragment : Fragment() {
     }
 
     private fun checkWorkRequestStatus() {
-        val workRequest = (requireActivity().application as AsteroidApplication).periodicWorkRequest
+        val workRequest = (requireActivity().application as AsteroidApplication).oneTimeWorkRequest
         WorkManager.getInstance(requireContext().applicationContext)
             .getWorkInfoByIdLiveData(workRequest.id).observe(viewLifecycleOwner, Observer {
                 if (it.state.isFinished) {
-                    val x = it.outputData.getInt(RefreshDataWorker.DATA_KEY, 0)
-                    Toast.makeText(context, "REFRESH FINISHED:${x}", Toast.LENGTH_LONG).show()
-                    Log.e("Periodic Main Frag: ", "REFRESH FINISHED:${x}")
+                    Log.e("CheckWorkReqState- ",it.state.toString())
                 }
             })
     }

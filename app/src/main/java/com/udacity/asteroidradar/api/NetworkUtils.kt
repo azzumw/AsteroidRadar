@@ -17,19 +17,9 @@ import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-enum class AsteroidApiFilter(val num: Int) {
-    SHOW_TODAY(num = 0),
-    SHOW_WEEKLY(num = 7)
-}
-
 
 private val moshi = Moshi.Builder().add(KotlinJsonAdapterFactory())
     .build()
-
-//private val retrofitApod = Retrofit.Builder()
-//    .addConverterFactory(MoshiConverterFactory.create(moshi))
-//    .baseUrl(Constants.BASE_URL)
-//    .build()
 
 private val retrofitApodScalar = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
@@ -48,12 +38,6 @@ private val retrofitAsteroids = Retrofit.Builder()
     .baseUrl(Constants.BASE_URL)
     .build()
 
-//interface MarsApiService {
-//    @GET("photos")
-//    suspend fun getPhotos():String
-//}
-
-
 interface AsteroidApiService {
 
     @GET(Constants.APOD_END_POINT)
@@ -61,12 +45,6 @@ interface AsteroidApiService {
         @Query(Constants.API_KEY_PARAM) apiKey: String
     ): String
 
-//    @GET(Constants.ASTEROID_END_POINT)
-//    suspend fun getNeoWs(
-//        @Query(Constants.START_DATE_PARAM) startDate: String,
-//        @Query(Constants.END_DATE_PARAM) endDate: String,
-//        @Query(Constants.API_KEY_PARAM) apiKey: String
-//    ): String
 
     @GET(Constants.ASTEROID_END_POINT)
     suspend fun getNeoWs(
@@ -76,9 +54,6 @@ interface AsteroidApiService {
 }
 
 object AsteroidApi {
-//    val retrofitService: AsteroidApiService by lazy {
-//        retrofitApod.create(AsteroidApiService::class.java)
-//    }
 
     val retrofitServiceScalar: AsteroidApiService by lazy {
         retrofitApodScalar.create(AsteroidApiService::class.java)
@@ -161,10 +136,6 @@ fun getNextSevenDaysFormattedDates(): ArrayList<String> {
 
     }
 
-    for (i in formattedDateList) {
-        Log.e("FORMATED DATES: ", formattedDateList.toString())
-    }
-
     return formattedDateList
 }
 
@@ -177,7 +148,4 @@ fun getTodaysDate(): String {
     return formatedDate.toString()
 
 }
-
-fun calculate(i: Int, j: Int): Int = i + j
-
 

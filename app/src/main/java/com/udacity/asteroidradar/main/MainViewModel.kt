@@ -13,8 +13,6 @@ import java.lang.Exception
 
 class MainViewModel(application: Application, private val asteroidRepository: Repository) : ViewModel() {
 
-//    private val asteroidRepository = AsteroidRepository(AppDatabase.getDatabase(application))
-
     private val allAsteroids: LiveData<List<Asteroid>> = asteroidRepository.asteroids
     private val todayAsteroids: LiveData<List<Asteroid>> = asteroidRepository.todayAsteroids
     private val todayHazardous: LiveData<List<Asteroid>> = asteroidRepository.todayHazardous

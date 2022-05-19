@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.WorkerParameters
-import com.udacity.asteroidradar.api.calculate
 import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.repository.AsteroidRepository
 import retrofit2.HttpException
@@ -14,7 +13,7 @@ class RefreshDataWorker(private val context: Context, workerParameters: WorkerPa
     CoroutineWorker(context, workerParameters) {
     companion object {
         const val WORKNAME = "RefreshDataWorker"
-        const val DATA_KEY = "num"
+//        const val DATA_KEY = "num"
     }
 
     override suspend fun doWork(): Result {
@@ -23,9 +22,9 @@ class RefreshDataWorker(private val context: Context, workerParameters: WorkerPa
         return try {
             repository.getAsteroids()
 
-            val x = calculate(2, 5)
-            val output = Data.Builder().putInt(DATA_KEY, x).build()
-            Result.success(output)
+//            val x = calculate(2, 5)
+//            val output = Data.Builder().putInt(DATA_KEY, x).build()
+            Result.success()
         } catch (e: HttpException) {
             Log.e("EXCEPTION WORK:", e.message())
             Result.retry()

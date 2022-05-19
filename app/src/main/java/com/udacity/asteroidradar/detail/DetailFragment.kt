@@ -33,12 +33,6 @@ class DetailFragment : Fragment() {
         }
 
 
-//        val asteroid = DetailFragmentArgs.fromBundle(arguments!!).selectedAsteroid
-
-
-//        binding.closeApproachDate.text = viewModel.singleAsteroid.value?.closeApproachDate
-
-
         return binding.root
     }
 

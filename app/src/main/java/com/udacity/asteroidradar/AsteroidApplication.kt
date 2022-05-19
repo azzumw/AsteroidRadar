@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar
 
 import android.app.Application
+import android.os.Build
 import androidx.work.*
 import com.udacity.asteroidradar.database.AppDatabase
 import com.udacity.asteroidradar.work.RefreshDataWorker
@@ -21,14 +22,14 @@ class AsteroidApplication : Application() {
 
     val periodicWorkRequest: PeriodicWorkRequest by lazy {
         /**If you want to test intervals please update param repeatInterval, and TimeUnit**/
-        PeriodicWorkRequestBuilder<RefreshDataWorker>(15, TimeUnit.MINUTES)
+        PeriodicWorkRequestBuilder<RefreshDataWorker>(24, TimeUnit.HOURS)
             .setInitialDelay(10, TimeUnit.SECONDS)
-//            .setConstraints(getConstraints())
-//            .setBackoffCriteria(
-//                BackoffPolicy.LINEAR,
-//                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
-//                TimeUnit.MILLISECONDS
-//            )
+            .setConstraints(getConstraints())
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            )
             .build()
     }
 
@@ -48,7 +49,7 @@ class AsteroidApplication : Application() {
     private fun refreshRequest() {
 //        WorkManager.getInstance().enqueue(oneTimeWorkRequest)
 
-        WorkManager.getInstance().enqueueUniquePeriodicWork(
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             RefreshDataWorker.WORKNAME,
             ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
         )
@@ -56,14 +57,14 @@ class AsteroidApplication : Application() {
 
     private fun getConstraints(): Constraints {
         return Constraints.Builder()
-//            .setRequiresBatteryNotLow(true)
-//            .setRequiresCharging(true)
-//            .setRequiredNetworkType(NetworkType.METERED)
-            //            .apply {
-            //                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //                    setRequiresDeviceIdle(true)
-            //                }
-            //            }
+            .setRequiresBatteryNotLow(true)
+            .setRequiresCharging(true)
+            .setRequiredNetworkType(NetworkType.METERED)
+//                        .apply {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                setRequiresDeviceIdle(true)
+//                            }
+//                        }
             .build()
     }
 }
