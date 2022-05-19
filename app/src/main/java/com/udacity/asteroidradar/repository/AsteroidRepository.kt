@@ -24,7 +24,7 @@ class AsteroidRepository(private val database: AppDatabase):Repository {
 
     override suspend fun getApod() {
         withContext(IO) {
-            val apodResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
+            val apodResult = AsteroidApi.retrofitServiceScalar.getApod(BuildConfig.NASA_API_KEY)
             val parsedApod = parseApod(JSONObject(apodResult))
 
             parsedApod?.let {
@@ -40,7 +40,7 @@ class AsteroidRepository(private val database: AppDatabase):Repository {
         withContext(IO) {
 
             val resultNeows =
-                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),Constants.API_KEY)
+                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),BuildConfig.NASA_API_KEY)
             val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows))
             database.asteroidDao().insertAllAsteroids(parsedList)
 
