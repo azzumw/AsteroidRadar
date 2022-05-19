@@ -1,41 +1,28 @@
 package com.udacity.asteroidradar.repository
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
 import com.udacity.asteroidradar.database.AppDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-class AsteroidRepository(private val database: AppDatabase) {
+class AsteroidRepository(private val database: AppDatabase):Repository {
 
-    val asteroids: LiveData<List<Asteroid>> =
-        database.asteroidDao().getAll(getTodaysDate()).asLiveData()
-    val todayAsteroids: LiveData<List<Asteroid>> =
-        database.asteroidDao().getTodaysAst(getTodaysDate()).asLiveData()
-    val todayHazardous: LiveData<List<Asteroid>> =
+    override val asteroids: LiveData<List<Asteroid>> =
+        database.asteroidDao().getWeeklyAsteroids(getTodaysDate()).asLiveData()
+    override val todayAsteroids: LiveData<List<Asteroid>> =
+        database.asteroidDao().getTodayAsteroids(getTodaysDate()).asLiveData()
+    override val todayHazardous: LiveData<List<Asteroid>> =
         database.asteroidDao().getPotentiallyHazardousFromToday(getTodaysDate(), true).asLiveData()
-    val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
-    private val _status = MutableLiveData<String>()
-    val status :LiveData<String> = _status
+    override val todayApod: LiveData<PictureOfDay?> = database.asteroidDao().getApod().asLiveData()
 
-    suspend fun refreshAsteroids(endD: AsteroidApiFilter) {
-        val endDate = when (endD) {
-            AsteroidApiFilter.SHOW_TODAY -> getNextSevenDaysFormattedDates(endD.num).last()
-            else -> getNextSevenDaysFormattedDates(endD.num).last()
-        }
 
-        withContext(Dispatchers.IO) {
-
-            val resultNeows = AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), endDate, Constants.API_KEY)
-            val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows), endD.num)
-            database.asteroidDao().insertAllAsteroids(parsedList)
-
+    override suspend fun getApod() {
+        withContext(IO) {
             val apodResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
             val parsedApod = parseApod(JSONObject(apodResult))
 
@@ -44,23 +31,18 @@ class AsteroidRepository(private val database: AppDatabase) {
                 database.asteroidDao().insertApod(parsedApod)
             }
         }
+
     }
 
-    suspend fun refreshMarsPhotos(){
+    override suspend fun getAsteroids() {
 
-//        withContext(Dispatchers.IO){
-//            val listResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
-//            val parsedApod = parseApod(JSONObject(listResult))
-//            parsedApod?.let {
-//                database.asteroidDao().insertApod(parsedApod)
-//            }
-//        }
+        withContext(IO) {
 
-//        coroutineScope {
-//            val listResult = AsteroidApi.retrofitServiceScalar.getApod(Constants.API_KEY)
-//            _status.value = listResult
-//
-//        }
+            val resultNeows =
+                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), Constants.API_KEY)
+            val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows))
+            database.asteroidDao().insertAllAsteroids(parsedList)
+
+        }
     }
-
 }

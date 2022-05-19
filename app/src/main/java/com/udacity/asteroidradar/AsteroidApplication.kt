@@ -2,10 +2,9 @@ package com.udacity.asteroidradar
 
 import android.app.Application
 import android.os.Build
-import androidx.constraintlayout.widget.Constraints
-//import androidx.work.*
+import androidx.work.*
 import com.udacity.asteroidradar.database.AppDatabase
-//import com.udacity.asteroidradar.work.RefreshDataWorker
+import com.udacity.asteroidradar.work.RefreshDataWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,43 +13,58 @@ import java.util.concurrent.TimeUnit
 class AsteroidApplication : Application() {
     val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
 
-    val applicationScope = CoroutineScope(Dispatchers.Default)
+    val oneTimeWorkRequest: OneTimeWorkRequest by lazy {
+        val constraints = getConstraints()
+        OneTimeWorkRequestBuilder<RefreshDataWorker>()
+            .setConstraints(constraints)
+            .addTag("TAG").build()
+    }
+
+    val periodicWorkRequest: PeriodicWorkRequest by lazy {
+        /**If you want to test intervals please update param repeatInterval, and TimeUnit**/
+        PeriodicWorkRequestBuilder<RefreshDataWorker>(24, TimeUnit.HOURS)
+            .setInitialDelay(10, TimeUnit.SECONDS)
+            .setConstraints(getConstraints())
+            .setBackoffCriteria(
+                BackoffPolicy.LINEAR,
+                PeriodicWorkRequest.MIN_BACKOFF_MILLIS,
+                TimeUnit.MILLISECONDS
+            )
+            .build()
+    }
+
+    private val applicationScope = CoroutineScope(Dispatchers.Default)
+
     override fun onCreate() {
         super.onCreate()
-//        delayedInit()
+        delayedInit()
     }
 
     private fun delayedInit() {
-//        applicationScope.launch {
-//            setupRecurringWork()
-//        }
+        applicationScope.launch {
+            refreshRequest()
+        }
     }
 
-    private fun setupRecurringWork() {
+    private fun refreshRequest() {
+//        WorkManager.getInstance().enqueue(oneTimeWorkRequest)
 
-//        val constraints = Constraints.Builder()
-//            .setRequiresCharging(true)
-//            .setRequiresBatteryNotLow(true)
-//            .setRequiredNetworkType(NetworkType.UNMETERED)
-//            .apply {
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    setRequiresDeviceIdle(true)
-//                }
-//            }
-//            .build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            RefreshDataWorker.WORKNAME,
+            ExistingPeriodicWorkPolicy.KEEP, periodicWorkRequest
+        )
+    }
 
-//        val batterLowConstraints = Constraints.Builder().setRequiresBatteryNotLow(true).build()
-
-//        val repeatingRequest = PeriodicWorkRequestBuilder<RefreshDataWorker>(1, TimeUnit.DAYS)
-//            .setConstraints(constraints).build()
-
-//        val deleteRepeatRequest = PeriodicWorkRequestBuilder<DeletePreviousDataWorker>(1, TimeUnit.DAYS)
-//            .setConstraints(batterLowConstraints).build()
-
-//        WorkManager.getInstance().enqueueUniquePeriodicWork(RefreshDataWorker.WORKNAME,ExistingPeriodicWorkPolicy.KEEP,repeatingRequest)
-
-//        workManager.enqueueUniquePeriodicWork(DeletePreviousDataWorker.DELETEWORKNAME,ExistingPeriodicWorkPolicy.KEEP,deleteRepeatRequest)
-
-
+    private fun getConstraints(): Constraints {
+        return Constraints.Builder()
+            .setRequiresBatteryNotLow(true)
+            .setRequiresCharging(true)
+            .setRequiredNetworkType(NetworkType.METERED)
+//                        .apply {
+//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                                setRequiresDeviceIdle(true)
+//                            }
+//                        }
+            .build()
     }
 }

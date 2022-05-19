@@ -33,4 +33,6 @@
     <string name="content_description_relative_velocity">The relative velocity is %s km per second</string>
     <string name="content_description_distance_from_earth">The distance from earth is %s astronomical units</string>
     <string name="content_description_help_button">help symbol to find out about absolute magnitude</string>
+    <string name="no_image_title">White cosmos</string>
+    <string name="no_data_message">The Earth looks safe!</string>
 </resources>

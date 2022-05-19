@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar.detail
 
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,12 +31,6 @@ class DetailFragment : Fragment() {
                 displayAstronomicalUnitExplanationDialog()
             }
         }
-
-
-//        val asteroid = DetailFragmentArgs.fromBundle(arguments!!).selectedAsteroid
-
-
-//        binding.closeApproachDate.text = viewModel.singleAsteroid.value?.closeApproachDate
 
 
         return binding.root

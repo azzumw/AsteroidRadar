@@ -88,8 +88,22 @@ dependencies {
 
 
 //    implementation "android.arch.work:work-runtime-ktx:1.0.1"
+    // Kotlin + coroutines
+//    implementation("androidx.work:work-runtime-ktx:2.0.0")
 
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //work
+//    implementation "androidx.work:work-runtime-ktx:2.4.0"
+    implementation("androidx.work:work-runtime-ktx:2.5.0")
+
+
+    // AndroidX Test - JVM testing
+    testImplementation "androidx.test:core-ktx:1.4.0"
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.robolectric:robolectric:4.3.1"
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    testImplementation "androidx.test.ext:junit-ktx:1.1.3"
+    //livedata
+    testImplementation('androidx.arch.core:core-testing:2.1.0')
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
 }

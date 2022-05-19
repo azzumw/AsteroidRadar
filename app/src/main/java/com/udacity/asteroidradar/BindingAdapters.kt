@@ -62,6 +62,5 @@ fun bindRecyclerView(
     data: List<Asteroid>?
 ) {
     val adapter = recyclerView.adapter as MainAsteroidAdapter
-//    Log.e("bindadapter",data?.size.toString())
     adapter.submitList(data)
 }

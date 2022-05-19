@@ -10,5 +10,5 @@ data class PictureOfDay(
     val title: String = "White Cosmos",
     @PrimaryKey
     val url: String,
-    val date:String
+    val date: String
 )
