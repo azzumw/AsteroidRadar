@@ -26,13 +26,6 @@ private val retrofitApodScalar = Retrofit.Builder()
     .baseUrl(Constants.BASE_URL)
     .build()
 
-
-private val retroMars = Retrofit.Builder()
-    .addConverterFactory(ScalarsConverterFactory.create())
-    .baseUrl(Constants.BASE_URL_MARS)
-    .build()
-
-
 private val retrofitAsteroids = Retrofit.Builder()
     .addConverterFactory(ScalarsConverterFactory.create())
     .baseUrl(Constants.BASE_URL)

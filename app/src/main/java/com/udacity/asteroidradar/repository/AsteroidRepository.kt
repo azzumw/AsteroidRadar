@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.repository
 
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.Asteroid
+import com.udacity.asteroidradar.BuildConfig
 import com.udacity.asteroidradar.Constants
 import com.udacity.asteroidradar.PictureOfDay
 import com.udacity.asteroidradar.api.*
@@ -39,7 +40,7 @@ class AsteroidRepository(private val database: AppDatabase):Repository {
         withContext(IO) {
 
             val resultNeows =
-                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(), Constants.API_KEY)
+                AsteroidApi.retrofitService2.getNeoWs(getTodaysDate(),Constants.API_KEY)
             val parsedList = parseAsteroidsJsonResult(JSONObject(resultNeows))
             database.asteroidDao().insertAllAsteroids(parsedList)
 

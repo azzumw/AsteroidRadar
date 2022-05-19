@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class AsteroidApplication : Application() {
-    val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
 
     val oneTimeWorkRequest: OneTimeWorkRequest by lazy {
         val constraints = getConstraints()
@@ -47,7 +46,6 @@ class AsteroidApplication : Application() {
     }
 
     private fun refreshRequest() {
-//        WorkManager.getInstance().enqueue(oneTimeWorkRequest)
 
         WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
             RefreshDataWorker.WORKNAME,
@@ -60,11 +58,6 @@ class AsteroidApplication : Application() {
             .setRequiresBatteryNotLow(true)
             .setRequiresCharging(true)
             .setRequiredNetworkType(NetworkType.METERED)
-//                        .apply {
-//                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                                setRequiresDeviceIdle(true)
-//                            }
-//                        }
             .build()
     }
 }

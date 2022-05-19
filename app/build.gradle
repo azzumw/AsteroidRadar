@@ -15,6 +15,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'NASA_API_KEY', myApiNasa
     }
     buildTypes {
         release {
@@ -80,6 +82,7 @@ dependencies {
 
     // "androidx.room:room-runtime:2.2.5"
     implementation "androidx.room:room-runtime:2.2.5"
+    implementation 'com.android.support:support-annotations:28.0.0'
 //    kapt "androidx.room:room-compiler:2.2.5"
 //    kapt "androidx.room:room-compiler:2.4.2"
 //    annotationProcessor "androidx.room:room-compiler:2.4.2"
